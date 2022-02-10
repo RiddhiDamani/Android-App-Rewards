@@ -6,13 +6,142 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
+    <ImageView
+        android:id="@+id/rewards_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="250dp"
+        android:alpha="0.2"
+        android:contentDescription="@string/todo"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/login_people"
+        tools:ignore="ImageContrastCheck" />
+
+    <ImageView
+        android:id="@+id/rewards_img"
+        android:layout_width="0dp"
+        android:layout_height="118dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@string/todo"
+        app:layout_constraintBottom_toBottomOf="@+id/rewards_logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/rewards_logo"
+        app:layout_constraintTop_toTopOf="@+id/rewards_logo"
+        app:srcCompat="@drawable/name_image" />
+
+    <ImageView
+        android:id="@+id/rewards_logo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/todo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
+
+    <EditText
+        android:id="@+id/rewards_main_username"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="64dp"
+        android:background="#ECECEC"
+        android:ems="10"
+        android:hint="@string/username"
+        android:inputType="textPersonName"
+        android:paddingStart="4dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:textColor="@color/text_hint"
+        android:textColorHint="#FF9800"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rewards_img"
+        tools:ignore="RtlSymmetry,TextContrastCheck,TouchTargetSizeCheck" />
+
+    <EditText
+        android:id="@+id/rewards_main_pswd"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="64dp"
+        android:background="#ECECEC"
+        android:ems="10"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:paddingStart="4dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:textColor="@color/text_hint"
+        android:textColorHint="@color/orange"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rewards_main_username"
+        tools:ignore="TextContrastCheck,TouchTargetSizeCheck" />
+
+    <CheckBox
+        android:id="@+id/credentials_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="24dp"
+        android:text="@string/remember_my_credentials"
+        android:textColor="#FF9800"
+        android:textSize="18sp"
+        app:buttonTint="#FF9800"
+        app:layout_constraintEnd_toEndOf="@+id/login_button"
+        app:layout_constraintStart_toStartOf="@+id/login_button"
+        app:layout_constraintTop_toBottomOf="@+id/login_button"
+        tools:ignore="TextContrastCheck" />
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="64dp"
+        android:text="@string/login"
+        android:textColor="#FF9800"
+        android:textSize="18sp"
+        app:backgroundTint="#E1E0E0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rewards_main_pswd"
+        tools:ignore="TextContrastCheck" />
+
+    <TextView
+        android:id="@+id/tap_create_profile_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="@string/tap_here_to_create_a_profile"
+        android:textColor="#FF9800"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="@+id/credentials_checkbox"
+        app:layout_constraintStart_toStartOf="@+id/credentials_checkbox"
+        app:layout_constraintTop_toBottomOf="@+id/credentials_checkbox"
+        tools:ignore="TextContrastCheck" />
+
+    <TextView
+        android:id="@+id/tap_clear_saved_api"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="84dp"
+        android:text="@string/tap_to_clear_saved_api_key"
+        android:textColor="#FF9800"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="@+id/credentials_checkbox"
+        app:layout_constraintStart_toStartOf="@+id/credentials_checkbox"
+        app:layout_constraintTop_toBottomOf="@+id/tap_create_profile_txt"
+        tools:ignore="TextContrastCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

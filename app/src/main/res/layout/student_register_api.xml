@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/student_firstname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:autofillHints=""
+        android:background="@color/input_grey"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="@string/fnlabel"
+        android:inputType="textPersonName"
+        android:textColorHint="@color/orange"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/student_lastname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/input_grey"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="@string/lnlabel"
+        android:inputType="textPersonName"
+        android:textColorHint="@color/orange"
+        app:layout_constraintEnd_toEndOf="@+id/student_firstname"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="@+id/student_firstname"
+        app:layout_constraintTop_toBottomOf="@+id/student_firstname" />
+
+    <EditText
+        android:id="@+id/student_emailid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/input_grey"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="@string/emaillabel"
+        android:inputType="textEmailAddress"
+        android:textColorHint="@color/orange"
+        app:layout_constraintEnd_toEndOf="@+id/student_lastname"
+        app:layout_constraintStart_toStartOf="@+id/student_lastname"
+        app:layout_constraintTop_toBottomOf="@+id/student_lastname" />
+
+    <EditText
+        android:id="@+id/student_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/input_grey"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="@string/idlabel"
+        android:inputType="number"
+        android:textColorHint="@color/orange"
+        app:layout_constraintEnd_toEndOf="@+id/student_emailid"
+        app:layout_constraintStart_toStartOf="@+id/student_emailid"
+        app:layout_constraintTop_toBottomOf="@+id/student_emailid" />
+</androidx.constraintlayout.widget.ConstraintLayout>

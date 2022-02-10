@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">RewardsApp</string>
+    <string name="password">Password</string>
+    <string name="studRegisterAPIKeyJSON">APIKey.json</string>
+    <string name="tap_to_clear_saved_api_key">Tap to clear saved API Key</string>
+    <string name="tap_here_to_create_a_profile">Tap here to create a profile</string>
+    <string name="login">LOGIN</string>
+    <string name="remember_my_credentials">Remember my credentials</string>
+    <string name="username">Username</string>
+    <string name="todo">TODO</string>
+    <string name="first_name">student_firstname</string>
+    <string name="last_name">student_lastname</string>
+    <string name="student_email_edu">student_emailid</string>
+    <string name="student_id_number">student_id</string>
+    <string name="base_url">http://christopherhield.org/api/</string>
+    <string name="fnlabel">First Name</string>
+    <string name="lnlabel">Last Name</string>
+    <string name="emaillabel">Student Email (.edu)</string>
+    <string name="idlabel">Student ID Number</string>
 </resources>
