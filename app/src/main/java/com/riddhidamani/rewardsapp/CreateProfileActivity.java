@@ -6,18 +6,24 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.riddhidamani.rewardsapp.databinding.ActivityCreateProfileBinding;
 
+import java.io.ByteArrayOutputStream;
+
 public class CreateProfileActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateProfile";
     private ActivityCreateProfileBinding binding;
     private EditText username, password, firstName, lastName, department, position;
+    public static Bitmap selectedImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +34,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         if (getActionBar() != null) {
             // Comment out the below line to show the default home indicator
-            getActionBar().setHomeAsUpIndicator(R.drawable.arrow_with_logo);
+            getActionBar().setHomeAsUpIndicator(R.drawable.logo);
             getActionBar().setHomeButtonEnabled(true);
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -111,6 +117,19 @@ public class CreateProfileActivity extends AppCompatActivity {
             return;
         }
 
+        Profile newUserProfile = new Profile(username);
+        newUserProfile.setPassword(password);
+        newUserProfile.setFirstName(firstName);
+        newUserProfile.setLastName(lastName);
+        newUserProfile.setDepartment(department);
+        newUserProfile.setPosition(position);
+        newUserProfile.setStory(story);
+        newUserProfile.setPointsToAward(remainingPoint);
+        newUserProfile.setLocation(MainActivity.locText);
+
+        String imageBase64 = makeImageBase64();
+        newUserProfile.setImageBytes(imageBase64);
+
     }
 
     public void invalidEntryDialog(String invalidInfo) {
@@ -128,5 +147,25 @@ public class CreateProfileActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private String makeImageBase64() {
+        // Remember - API requirements:
+        // Profile image (as Base64 String) – Not null or empty, 100000 character maximum
+        ByteArrayOutputStream byteArrayOutputStream;
+        int value = 50;
+        while (value > 0) {
+            byteArrayOutputStream = new ByteArrayOutputStream();
+            selectedImage.compress(Bitmap.CompressFormat.JPEG, 40, byteArrayOutputStream);
+            String b64 = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
+            Log.d(TAG, "makeImageBase64: " + b64.length());
+            if (b64.length() > 100000) {
+                value -= 10;
+            } else {
+                Log.d(TAG, "makeImageBase64: " + value);
+                return b64;
+            }
+        }
+        return null;
     }
 }
