@@ -9,6 +9,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -277,5 +278,35 @@ public class MainActivity extends AppCompatActivity {
         builder.setIcon(R.drawable.icon);
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    public void handleError(String s) {
+        Toast.makeText(MainActivity.this, s,
+                Toast.LENGTH_LONG).show();
+    }
+
+    public void deleteStudentRegisterAPIKey(View v) {
+        try {
+            FileOutputStream fos = getApplicationContext().openFileOutput(getString(R.string.studRegisterAPIKeyJSON), Context.MODE_PRIVATE);
+            JsonWriter writer = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                writer = new JsonWriter(new OutputStreamWriter(fos, StandardCharsets.UTF_8));
+            }
+            writer.setIndent("  ");
+            writer.beginObject();
+            writer.name("APIKey").value("");
+            writer.endObject();
+            writer.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d(TAG, "writeJSONData: "+ e.getMessage());
+
+        }
+    }
+
+    public void createProfile(View v) {
+        Intent intent = new Intent(this, CreateProfileActivity.class);
+        startActivity(intent);
     }
 }

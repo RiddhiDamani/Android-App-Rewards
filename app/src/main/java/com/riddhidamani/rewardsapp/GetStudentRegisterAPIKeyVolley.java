@@ -3,8 +3,6 @@ package com.riddhidamani.rewardsapp;
 import android.app.Activity;
 import android.net.Uri;
 import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
-
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -35,11 +33,12 @@ public class GetStudentRegisterAPIKeyVolley {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    JSONObject jsonObject = response.getJSONObject("");
+                    //JSONObject jsonObject = response.getJSONObject("");
                     String apiKey = response.getString("apiKey");
                     Log.d(TAG, "GetStudentRegisterAPIKeyVolley: " + apiKey);
-                    activity.runOnUiThread(() ->
-                            activity.handleApiKeySucceeded(apiKey));
+                    activity.handleApiKeySucceeded(apiKey);
+//                    activity.runOnUiThread(() ->
+//                            );
                 } catch (JSONException exception) {
                    exception.printStackTrace();
                 }
@@ -51,7 +50,9 @@ public class GetStudentRegisterAPIKeyVolley {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "onErrorResponse: " + error.getMessage());
-                String errorMsg = error.networkResponse == null ? error.getClass().getName() : new String(error.networkResponse.data);
+                String errorMsg = error.networkResponse == null ?
+                        error.getClass().getName() : new String(error.networkResponse.data);
+                activity.runOnUiThread(() -> activity.handleError(errorMsg));
             }
         };
 

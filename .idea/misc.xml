@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/layout/activity_create_profile.xml" value="0.23229166666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/student_register_api.xml" value="0.25" />
+        <entry key="app/src/main/res/menu/createprofile_menu.xml" value="0.21203703703703702" />
       </map>
     </option>
   </component>
