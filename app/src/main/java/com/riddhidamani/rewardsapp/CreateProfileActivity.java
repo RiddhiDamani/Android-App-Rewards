@@ -177,8 +177,8 @@ public class CreateProfileActivity extends AppCompatActivity {
                 CreateProfileVolley.createProfile(CreateProfileActivity.this, firstName, lastName, username, password, department, position, story, remainingPoint, MainActivity.locText, imageString64);
 
                 Intent intent = new Intent(CreateProfileActivity.this, ProfileActivity.class);
-                //intent.putExtra("NEW_PROFILE",  newUserProfile);
-                //displayProfileResultLauncher.launch(intent);
+                intent.putExtra("NEW_PROFILE",  newUserProfile);
+                displayProfileResultLauncher.launch(intent);
             }
         });
 

@@ -2,10 +2,11 @@ package com.riddhidamani.rewardsapp.profile;
 
 import com.riddhidamani.rewardsapp.reward.Reward;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Profile implements Comparable<Profile> {
+public class Profile implements Serializable, Comparable<Profile> {
     private String username, password, firstName, lastName, department, position, story;
     private String points, pointsToAward, imageBytes;
     private String location;
