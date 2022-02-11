@@ -25,8 +25,26 @@
     <string name="department_hint">Information Technology</string>
     <string name="position_hint">Director of Development</string>
     <string name="your_story_count">Your Story: (0 of 360)</string>
-    <string name="story_hint">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+    <string name="story_hint"> Tell something about yourself! </string>
     <string name="menuitem">menuItem</string>
+
+    <!-- Activity Profile -->
+    <string name="last_first_name">lastName, firstName</string>
+    <string name="username_profile">(username)</string>
+    <string name="location">location</string>
+    <string name="profile_image">profileImage</string>
+    <string name="points_awarded">Points Awarded:</string>
+    <string name="department">Department:</string>
+    <string name="position">Position:</string>
+    <string name="points_to_award">Points to Award:</string>
+    <string name="story">Your Story:</string>
+    <string name="reward_history">Reward History (0):</string>
+    <string name="points_awarded_value">0</string>
+    <string name="delete_profile">Delete Profile</string>
+    <string name="pref">pref</string>
+    <string name="edit">edit</string>
+    <string name="item">Item</string>
+    <string name="textview">TextView</string>
 
 
 </resources>

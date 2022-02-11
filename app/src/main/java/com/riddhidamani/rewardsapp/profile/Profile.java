@@ -1,4 +1,6 @@
-package com.riddhidamani.rewardsapp;
+package com.riddhidamani.rewardsapp.profile;
+
+import com.riddhidamani.rewardsapp.reward.Reward;
 
 import java.util.ArrayList;
 import java.util.List;

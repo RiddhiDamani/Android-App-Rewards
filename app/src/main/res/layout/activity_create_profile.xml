@@ -17,14 +17,14 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:contentDescription="@string/profile_pic"
-            android:onClick="displayProfileDialog"
+            android:onClick="addPicOnCreateProfileDialog"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/default_photo" />
 
         <EditText
-            android:id="@+id/cp_username"
+            android:id="@+id/cpUsername"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -47,7 +47,7 @@
             tools:ignore="TextContrastCheck,TouchTargetSizeCheck" />
 
         <EditText
-            android:id="@+id/cp_firstname"
+            android:id="@+id/cpFirstname"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -61,14 +61,14 @@
             android:paddingBottom="4dp"
             android:textColorHint="@color/text_hint"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="@+id/cp_username"
+            app:layout_constraintEnd_toEndOf="@+id/cpUsername"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/cp_username"
-            app:layout_constraintTop_toBottomOf="@+id/cp_password"
+            app:layout_constraintStart_toStartOf="@+id/cpUsername"
+            app:layout_constraintTop_toBottomOf="@+id/cpPassword"
             tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
         <EditText
-            android:id="@+id/cp_department"
+            android:id="@+id/cpDepartment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -87,11 +87,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cp_lastname"
+            app:layout_constraintTop_toBottomOf="@+id/cpLastname"
             tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
         <EditText
-            android:id="@+id/cp_position"
+            android:id="@+id/cpPosition"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -110,11 +110,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cp_department"
+            app:layout_constraintTop_toBottomOf="@+id/cpDepartment"
             tools:ignore="TextContrastCheck,TouchTargetSizeCheck" />
 
         <EditText
-            android:id="@+id/cp_lastname"
+            android:id="@+id/cpLastname"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -128,14 +128,14 @@
             android:paddingBottom="4dp"
             android:textColorHint="@color/text_hint"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="@+id/cp_username"
+            app:layout_constraintEnd_toEndOf="@+id/cpUsername"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/cp_username"
-            app:layout_constraintTop_toBottomOf="@+id/cp_firstname"
+            app:layout_constraintStart_toStartOf="@+id/cpUsername"
+            app:layout_constraintTop_toBottomOf="@+id/cpFirstname"
             tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
         <EditText
-            android:id="@+id/cp_password"
+            android:id="@+id/cpPassword"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -148,14 +148,14 @@
             android:paddingEnd="4dp"
             android:paddingBottom="4dp"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="@+id/cp_username"
+            app:layout_constraintEnd_toEndOf="@+id/cpUsername"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/cp_username"
-            app:layout_constraintTop_toBottomOf="@+id/cp_username"
+            app:layout_constraintStart_toStartOf="@+id/cpUsername"
+            app:layout_constraintTop_toBottomOf="@+id/cpUsername"
             tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
         <EditText
-            android:id="@+id/cp_user_story"
+            android:id="@+id/cpUserStory"
             android:layout_width="374dp"
             android:layout_height="304dp"
             android:layout_marginStart="16dp"
@@ -172,11 +172,11 @@
             android:paddingBottom="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cp_story_title"
+            app:layout_constraintTop_toBottomOf="@+id/cpStoryTitle"
             tools:ignore="TextContrastCheck" />
 
         <TextView
-            android:id="@+id/cp_story_title"
+            android:id="@+id/cpStoryTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -184,6 +184,6 @@
             android:text="@string/your_story_count"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cp_position" />
+            app:layout_constraintTop_toBottomOf="@+id/cpPosition" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

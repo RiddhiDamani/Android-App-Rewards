@@ -4,9 +4,17 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/layout/activity_create_profile.xml" value="0.23229166666666667" />
+        <entry key="app/src/main/res/layout/activity_edit_profile.xml" value="0.23229166666666667" />
+        <entry key="app/src/main/res/layout/activity_leaderboard.xml" value="0.23229166666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_profile.xml" value="0.23229166666666667" />
+        <entry key="app/src/main/res/layout/activity_reward.xml" value="0.23229166666666667" />
+        <entry key="app/src/main/res/layout/entry_profile.xml" value="0.23229166666666667" />
         <entry key="app/src/main/res/layout/student_register_api.xml" value="0.25" />
         <entry key="app/src/main/res/menu/createprofile_menu.xml" value="0.21203703703703702" />
+        <entry key="app/src/main/res/menu/editprofile_menu.xml" value="0.23229166666666667" />
+        <entry key="app/src/main/res/menu/profile_menu.xml" value="0.23229166666666667" />
+        <entry key="app/src/main/res/xml/file_paths.xml" value="0.2074074074074074" />
       </map>
     </option>
   </component>

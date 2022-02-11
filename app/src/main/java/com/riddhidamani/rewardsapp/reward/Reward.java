@@ -1,4 +1,4 @@
-package com.riddhidamani.rewardsapp;
+package com.riddhidamani.rewardsapp.reward;
 
 
 public class Reward {

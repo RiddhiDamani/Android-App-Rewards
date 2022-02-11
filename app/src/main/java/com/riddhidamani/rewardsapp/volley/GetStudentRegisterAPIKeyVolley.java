@@ -1,4 +1,4 @@
-package com.riddhidamani.rewardsapp;
+package com.riddhidamani.rewardsapp.volley;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -12,6 +12,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
+import com.riddhidamani.rewardsapp.MainActivity;
+import com.riddhidamani.rewardsapp.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.HashMap;
