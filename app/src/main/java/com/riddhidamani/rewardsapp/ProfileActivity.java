@@ -1,15 +1,18 @@
 package com.riddhidamani.rewardsapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,18 +43,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         binding = ActivityProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        if (getActionBar() != null) {
-            // Comment out the below line to show the default home indicator
-            getActionBar().setHomeAsUpIndicator(R.drawable.logo);
-            getActionBar().setHomeButtonEnabled(true);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
+        HomeNav.setupHomeIndicator(getSupportActionBar());
         setTitle("Your Profile");
 
         // get profile from CreateProfile
         Intent intent = getIntent();
         if(intent.hasExtra("NEW_PROFILE")) {
+            Log.d(TAG, "onCreate: ProfileActivity ---- Inside PROFILE");
             loggedInUserProfile = (Profile) intent.getSerializableExtra("NEW_PROFILE");
 
         } else if (intent.hasExtra("LOGIN_PROFILE")) {
@@ -69,19 +67,17 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-
-
-    private void updateProfile(Profile profile){
+    private void updateProfile(Profile profile) {
         String fullName = profile.getLastName() + ", " + profile.getFirstName();
         binding.lastFirstName.setText(fullName);
         binding.username.setText("("+profile.getUsername()+")");
-        binding.department.setText(profile.getDepartment());
-        binding.position.setText(profile.getPosition());
+        binding.departmentValue.setText(profile.getDepartment());
+        binding.positionValue.setText(profile.getPosition());
         String storyTmp = profile.getStory();
         binding.storyValue.setText(profile.getStory());
 
         String pointStr = profile.getPoints();
-        binding.pointsAwarded.setText(pointStr);
+        binding.pointsValue.setText(pointStr);
         binding.location.setText(profile.getLocation());
         binding.pointsToAwardValue.setText(profile.getPointsToAward());
         String imgStr = profile.getImageBytes();
@@ -119,8 +115,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 return true;
             case R.id.preference_menu:
                 return true;
-            case R.id.profile_delete_menu:
-               // deleteDialog();
             default:
                 return super.onOptionsItemSelected(menuItem);
         }
@@ -132,5 +126,21 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         byte[] imageBytes = Base64.decode(imgStr64, Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
         binding.imageDisplay.setImageBitmap(bitmap);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+//        if(requestCode == EDIT_REQUEST){
+//            if(resultCode == Activity.RESULT_OK){
+//                if(data != null) {
+//                    Profile p = (Profile)data.getSerializableExtra("EDIT_PROFILE");
+//                    if(p != null){
+//                        updateProfile(p);
+//                    }
+//                }
+//            }
+//        }
     }
 }

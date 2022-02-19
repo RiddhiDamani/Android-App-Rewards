@@ -4,7 +4,6 @@ package com.riddhidamani.rewardsapp.volley;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;

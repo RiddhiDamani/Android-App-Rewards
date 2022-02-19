@@ -45,7 +45,6 @@ public class GetStudentRegisterAPIKeyVolley {
                 } catch (JSONException exception) {
                    exception.printStackTrace();
                 }
-
             }
         };
 

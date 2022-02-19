@@ -31,7 +31,6 @@ import com.google.android.gms.location.LocationServices;
 import com.riddhidamani.rewardsapp.volley.GetStudentRegisterAPIKeyVolley;
 
 import org.json.JSONObject;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -64,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
         // binding = ActivityMainBinding.inflate(getLayoutInflater());
         // setContentView(binding.getRoot());
-
+        HomeNav.setupHomeIndicator(getSupportActionBar());
         setTitle("Rewards");
 
         username = findViewById(R.id.rewards_main_username);

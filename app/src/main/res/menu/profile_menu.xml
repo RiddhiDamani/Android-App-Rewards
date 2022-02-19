@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/profile_delete_menu"
-        android:icon="@android:drawable/ic_menu_delete"
-        android:title="@string/delete_profile"
-        android:visible="true"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/preference_menu"
         android:icon="@android:drawable/ic_menu_preferences"
         android:title="@string/pref"

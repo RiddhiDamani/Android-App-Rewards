@@ -6,8 +6,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,17 +15,12 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
-import android.util.Patterns;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,13 +59,7 @@ public class CreateProfileActivity extends AppCompatActivity {
 
         binding = ActivityCreateProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        if (getActionBar() != null) {
-            // Comment out the below line to show the default home indicator
-            getActionBar().setHomeAsUpIndicator(R.drawable.logo);
-            getActionBar().setHomeButtonEnabled(true);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        HomeNav.setupHomeIndicator(getSupportActionBar());
         setTitle("Create Profile");
         setupEditText();
 
@@ -83,6 +70,9 @@ public class CreateProfileActivity extends AppCompatActivity {
         galleryActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 this::handleGalleryResult);
+
+        displayProfileResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), this::displayProfileHandler);
     }
 
     @Override
@@ -377,5 +367,9 @@ public class CreateProfileActivity extends AppCompatActivity {
         toast.setView(tv);
 
         toast.show();
+    }
+
+    public void displayProfileHandler(ActivityResult result) {
+        Log.d(TAG, "displayProfileHandler: ");
     }
 }
