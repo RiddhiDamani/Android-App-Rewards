@@ -6,7 +6,15 @@
         android:id="@+id/preference_menu"
         android:icon="@android:drawable/ic_menu_preferences"
         android:title="@string/pref"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        >
+        <menu>
+            <item android:id="@+id/delete"
+                android:icon="@android:drawable/ic_menu_delete"
+                android:title="@string/delete_profile">
+            </item>
+        </menu>
+    </item>
     <item
         android:id="@+id/profile_edit_menu"
         android:icon="@android:drawable/ic_menu_edit"

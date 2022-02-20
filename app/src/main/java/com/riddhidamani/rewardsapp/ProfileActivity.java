@@ -2,11 +2,13 @@ package com.riddhidamani.rewardsapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,11 +18,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.riddhidamani.rewardsapp.databinding.ActivityProfileBinding;
 import com.riddhidamani.rewardsapp.profile.Profile;
 import com.riddhidamani.rewardsapp.reward.Reward;
 import com.riddhidamani.rewardsapp.reward.RewardAdapter;
+import com.riddhidamani.rewardsapp.volley.CreateProfileVolley;
+import com.riddhidamani.rewardsapp.volley.DeleteProfileVolley;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,9 +120,42 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 return true;
             case R.id.preference_menu:
                 return true;
+            case R.id.delete:
+                deleteProfile();
+                return true;
             default:
                 return super.onOptionsItemSelected(menuItem);
         }
+    }
+
+    private void deleteProfile() {
+        //Toast.makeText(this, "Deleting Profile: ", Toast.LENGTH_LONG).show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                initiateDeleteProfile();
+            }
+        });
+
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // just a OK button
+            }
+        });
+
+        String content = "Delete Profile for " + loggedInUserProfile.getFirstName() + " " + loggedInUserProfile.getLastName()
+                +"\n(The Rewards app will be closed upon deletion).";
+
+        builder.setTitle("Delete Profile?");
+        builder.setMessage(content);
+        builder.setIcon(R.drawable.icon);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void initiateDeleteProfile() {
+        DeleteProfileVolley.initiate(ProfileActivity.this, loggedInUserProfile.getUsername());
+        finishAffinity();
     }
 
     public void textToImage(String imgStr64) {
