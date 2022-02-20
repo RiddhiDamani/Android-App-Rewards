@@ -1,7 +1,9 @@
 package com.riddhidamani.rewardsapp.reward;
 
 
-public class Reward {
+import java.io.Serializable;
+
+public class Reward implements Serializable {
 
     private String receiverUser, giverName, giverUser, amount, note, awardDate;
 

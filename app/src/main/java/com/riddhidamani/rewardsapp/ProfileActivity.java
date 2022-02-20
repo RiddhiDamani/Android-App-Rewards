@@ -1,5 +1,8 @@
 package com.riddhidamani.rewardsapp;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -28,6 +31,7 @@ import com.riddhidamani.rewardsapp.volley.CreateProfileVolley;
 import com.riddhidamani.rewardsapp.volley.DeleteProfileVolley;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
@@ -39,6 +43,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private final List<Reward> rewardList = new ArrayList<>();
     private RewardAdapter mAdaptor;
     private RecyclerView recyclerView;
+
+    private ActivityResultLauncher<Intent> editProfileResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +76,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         mAdaptor = new RewardAdapter(rewardList, this);
         recyclerView.setAdapter(mAdaptor);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        editProfileResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), this::displayEditProfileHandler);
     }
 
     private void updateProfile(Profile profile) {
@@ -113,7 +122,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     public boolean onOptionsItemSelected(@NonNull MenuItem menuItem) {
         switch(menuItem.getItemId()) {
             case R.id.profile_edit_menu:
-                //startEditProfileActivity();
+                initiateEditProfileActivity();
                 return true;
             case R.id.profile_leaderboard_menu:
                 initiateLeaderBoardActivity();
@@ -126,6 +135,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             default:
                 return super.onOptionsItemSelected(menuItem);
         }
+    }
+
+    private void initiateEditProfileActivity() {
+        Intent intent = new Intent(this, EditProfileActivity.class);
+        intent.putExtra("EDIT_PROFILE", loggedInUserProfile);
+        editProfileResultLauncher.launch(intent);
     }
 
     private void initiateLeaderBoardActivity() {
@@ -171,19 +186,16 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         binding.imageDisplay.setImageBitmap(bitmap);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-//        if(requestCode == EDIT_REQUEST){
-//            if(resultCode == Activity.RESULT_OK){
-//                if(data != null) {
-//                    Profile p = (Profile)data.getSerializableExtra("EDIT_PROFILE");
-//                    if(p != null){
-//                        updateProfile(p);
-//                    }
-//                }
-//            }
-//        }
+    private void displayEditProfileHandler(ActivityResult activityResult) {
+        Log.d(TAG, "On handleResult Method: EDIT");
+        if(activityResult.getResultCode() == 1) {
+            Intent data = activityResult.getData();
+            if(data != null) {
+                Profile profile = (Profile)data.getSerializableExtra("EDIT_PROFILE");
+                if(profile != null) {
+                    updateProfile(profile);
+                }
+            }
+        }
     }
 }
