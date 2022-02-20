@@ -28,7 +28,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.riddhidamani.rewardsapp.profile.Profile;
 import com.riddhidamani.rewardsapp.volley.GetStudentRegisterAPIKeyVolley;
+import com.riddhidamani.rewardsapp.volley.LoginVolley;
 
 import org.json.JSONObject;
 import java.io.FileInputStream;
@@ -78,6 +80,14 @@ public class MainActivity extends AppCompatActivity {
             requestStudentRegisterApiKey();
 
         }
+    }
+
+    public void performLogin(View v) {
+        String usernameStr = username.getText().toString();
+        String passwordStr = password.getText().toString();
+        writeJSON();
+        LoginVolley.getLoginDetails(this, usernameStr, passwordStr);
+        //new Thread(new LoginAPIRunnable(MainActivity.this, usernameStr, passwordStr)).start();
     }
 
     // Initial Location setup
@@ -306,6 +316,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void createProfile(View v) {
         Intent intent = new Intent(this, CreateProfileActivity.class);
+        startActivity(intent);
+    }
+
+    public void displayLoginProfile(Profile profile) {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra("LOGIN_PROFILE", profile);
         startActivity(intent);
     }
 }

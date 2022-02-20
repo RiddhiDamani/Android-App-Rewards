@@ -116,7 +116,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 //startEditProfileActivity();
                 return true;
             case R.id.profile_leaderboard_menu:
-                //startLeaderBoard();
+                initiateLeaderBoardActivity();
                 return true;
             case R.id.preference_menu:
                 return true;
@@ -126,6 +126,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             default:
                 return super.onOptionsItemSelected(menuItem);
         }
+    }
+
+    private void initiateLeaderBoardActivity() {
+        Intent intent = new Intent(this, LeaderboardActivity.class);
+        startActivity(intent);
     }
 
     private void deleteProfile() {

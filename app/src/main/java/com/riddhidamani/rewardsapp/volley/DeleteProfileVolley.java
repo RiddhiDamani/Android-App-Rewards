@@ -10,7 +10,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.riddhidamani.rewardsapp.MainActivity;
 import com.riddhidamani.rewardsapp.ProfileActivity;
-import com.riddhidamani.rewardsapp.R;
 import java.util.HashMap;
 import java.util.Map;
 

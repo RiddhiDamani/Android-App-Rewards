@@ -29,7 +29,6 @@ public class GetStudentRegisterAPIKeyVolley {
             MainActivity activity, String fName, String lName, String email, String id) {
 
         RequestQueue queue = Volley.newRequestQueue(activity);
-
         String urlToUse = makeUrl(activity, fName, lName, id, email);
 
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
@@ -58,7 +57,7 @@ public class GetStudentRegisterAPIKeyVolley {
             }
         };
 
-        // Request a string response from the provided URL.
+        // Request a json response from the provided URL.
         JsonRequest<JSONObject> jsonRequest = new JsonRequest<JSONObject>(
                 Request.Method.GET, urlToUse, null, listener, error) {
 

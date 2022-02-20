@@ -107,6 +107,7 @@
         android:layout_marginStart="64dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="64dp"
+        android:onClick="performLogin"
         android:text="@string/login"
         android:textColor="#FF9800"
         android:textSize="18sp"

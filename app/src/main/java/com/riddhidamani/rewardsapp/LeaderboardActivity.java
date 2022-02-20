@@ -5,12 +5,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.riddhidamani.rewardsapp.profile.Profile;
 import com.riddhidamani.rewardsapp.profile.ProfileAdapter;
+import com.riddhidamani.rewardsapp.volley.GetAllProfileVolley;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class LeaderboardActivity extends AppCompatActivity implements View.OnClickListener {
@@ -25,14 +28,7 @@ public class LeaderboardActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboard);
-
-        if (getActionBar() != null) {
-            // Comment out the below line to show the default home indicator
-            getActionBar().setHomeAsUpIndicator(R.drawable.logo);
-            getActionBar().setHomeButtonEnabled(true);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
+        HomeNav.setupHomeIndicator(getSupportActionBar());
         setTitle("Leaderboard");
 
         recyclerView = findViewById(R.id.recyclerView);
@@ -49,6 +45,13 @@ public class LeaderboardActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void getAllProfile() {
+        GetAllProfileVolley.getAllUserProfiles(this, MainActivity.APIKey);
+    }
 
+    public void addProfile(Profile newProfile) {
+        if(newProfile == null) Log.d(TAG, "addProfile: null new profile to add");
+        profileList.add(newProfile);
+        mAdaptor.notifyDataSetChanged();
+        Collections.sort(profileList);
     }
 }
