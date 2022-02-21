@@ -4,63 +4,83 @@ package com.riddhidamani.rewardsapp.volley;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
-import com.riddhidamani.rewardsapp.CreateProfileActivity;
+import com.riddhidamani.rewardsapp.EditProfileActivity;
 import com.riddhidamani.rewardsapp.MainActivity;
+import com.riddhidamani.rewardsapp.profile.Profile;
+
+import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
+public class UpdateProfileVolley {
 
-public class CreateProfileVolley {
-
-    private static final String TAG = "CreateProfileVolley";
+    private static final String TAG = "UpdateProfileVolley";
     private static final String baseURL = "http://www.christopherhield.org/api/";
-    private static final String endPoint = "Profile/CreateProfile";
+    private static final String endPoint = "Profile/UpdateProfile";
+    private static String firstname, lastname, username, department, story, position, password, location, imageString64;
 
-    public static void createProfile(CreateProfileActivity createProfileActivity, String firstname, String lastname,
-                                 String username, String password, String department, String position,
-                                 String story, String remainingPointsToAward, String location,
-                                 String imageString64) {
 
-        RequestQueue queue = Volley.newRequestQueue(createProfileActivity);
+    public static void updateProfileData(EditProfileActivity editProfileActivity, Profile profileHolder) {
+        RequestQueue queue = Volley.newRequestQueue(editProfileActivity);
+        Profile profile = profileHolder;
+        firstname = profile.getFirstName();
+        lastname = profile.getLastName();
+        username = profile.getUsername();
+        password = profile.getPassword();
+        department = profile.getDepartment();
+        position = profile.getPosition();
+        location = profile.getLocation();
+        story = profile.getStory();
+        imageString64 = profile.getImageBytes();
 
-        String urlToUse = makeUrl(firstname, lastname, username, password, department, position, story, remainingPointsToAward, location);
+        String urlToUse = makeUrl(firstname, lastname, username, department, story, position, password, location);
+        Log.d(TAG, "updateProfileData: Full URL: " + urlToUse);
 
-        Log.d(TAG, "run: Full URL: " + urlToUse);
-        Log.d(TAG, "Main Activity API" + MainActivity.APIKey);
-
-        Response.Listener<JSONObject> listener = response -> Log.d(TAG, "user profile created successfully" + response);
-
-        Response.ErrorListener error = error1 -> {
-            Log.d(TAG, "onErrorResponse: " + error1.getMessage());
-            //String errorMsg = error.networkResponse == null ?
-            //        error.getClass().getName() : new String(error.networkResponse.data);
-            NetworkResponse response = error1.networkResponse;
-            if(response != null) {
-                switch (response.statusCode) {
-                    case 400:
-                        Toast.makeText(createProfileActivity, "Provided Values are null, empty, exceed the " +
-                                "maximum field size, or violate special requirements", Toast.LENGTH_LONG).show();
-                    case 409:
-                        Toast.makeText(createProfileActivity, "User does not exist, or user attempts to change" +
-                                "the username", Toast.LENGTH_LONG).show();
+        Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String points = response.getString("remainingPointsToAward");
+                    editProfileActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            editProfileActivity.getUpdatedUserProfile(points);
+                        }
+                    });
+                } catch (JSONException exception) {
+                    exception.printStackTrace();
                 }
+                Log.d(TAG, "run: created successfully" + response);
             }
-            //Toast.makeText(createProfileActivity, errorMsg, Toast.LENGTH_LONG).show();
         };
+
+        Response.ErrorListener error = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                String errorMsg = error.networkResponse == null ?
+                        error.getClass().getName() : new String(error.networkResponse.data);
+                Toast.makeText(editProfileActivity, errorMsg, Toast.LENGTH_LONG).show();
+            }
+        };
+
 
         // Request a string response from the provided URL.
         // Request Body has - imageBase64
         JsonRequest<JSONObject> jsonRequest = new JsonRequest<JSONObject>(
-                Request.Method.POST, urlToUse, imageString64, listener, error) {
+                Request.Method.PUT, urlToUse, imageString64, listener, error) {
 
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
@@ -86,12 +106,12 @@ public class CreateProfileVolley {
         };
         // Add the request to the RequestQueue.
         queue.add(jsonRequest);
+
     }
 
     private static String makeUrl(String firstname, String lastname,
-                                  String username, String password, String department, String position,
-                                  String story, String remainingPointsToAward, String location) {
-
+                                  String username, String department, String story,
+                                  String position, String password, String location) {
 
         String urlString = baseURL + endPoint;
         Log.d(TAG, "run: Initial URL: " + urlString);
@@ -103,9 +123,7 @@ public class CreateProfileVolley {
         buildURL.appendQueryParameter("story", story);
         buildURL.appendQueryParameter("position", position);
         buildURL.appendQueryParameter("password", password);
-        buildURL.appendQueryParameter("remainingPointsToAward", remainingPointsToAward);
         buildURL.appendQueryParameter("location", location);
-
         return buildURL.build().toString();
     }
 }

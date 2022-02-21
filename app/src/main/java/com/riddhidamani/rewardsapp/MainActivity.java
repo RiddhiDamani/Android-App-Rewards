@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         String passwordStr = password.getText().toString();
         writeJSON();
         LoginVolley.getLoginDetails(this, usernameStr, passwordStr);
-        //new Thread(new LoginAPIRunnable(MainActivity.this, usernameStr, passwordStr)).start();
     }
 
     // Initial Location setup

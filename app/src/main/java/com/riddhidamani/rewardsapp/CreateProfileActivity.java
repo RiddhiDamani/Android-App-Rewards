@@ -40,17 +40,15 @@ import java.util.Locale;
 
 public class CreateProfileActivity extends AppCompatActivity {
 
-    private static final String TAG = "CreateProfile";
+    private static final String TAG = "CreateProfileActivity";
     private ActivityCreateProfileBinding binding;
     public static Bitmap selectedImage;
     private ActivityResultLauncher<Intent> thumbActivityResultLauncher;
     private ActivityResultLauncher<Intent> galleryActivityResultLauncher;
     private ActivityResultLauncher<Intent> displayProfileResultLauncher;
 
-
     // Story Count
     private static final int MAX_LEN = 360;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,15 +103,10 @@ public class CreateProfileActivity extends AppCompatActivity {
                 String department = binding.cpDepartment.getText().toString();
                 String position = binding.cpPosition.getText().toString();
                 String story = binding.cpUserStory.getText().toString();
-                String remainingPoint = "1000";
+                String location = MainActivity.locText;
+                String remainingPointToAward = "1000";
 
-                // Validate Entries
-                if(username == null || username.isEmpty() || username.length() > 20) {
-                    invalidEntryDialog("Username");
-                    binding.cpUsername.setText(" ");
-                    return;
-                }
-
+                // Query Parameters Check - Validations of Input
                 if(firstName == null || firstName.isEmpty() || firstName.length() > 20 ){
                     invalidEntryDialog("First Name");
                     binding.cpFirstname.setText(" ");
@@ -126,7 +119,13 @@ public class CreateProfileActivity extends AppCompatActivity {
                     return;
                 }
 
-                if(department == null || department.isEmpty() || department.length() > 20 ){
+                if(username == null || username.isEmpty() || username.length() > 20) {
+                    invalidEntryDialog("Username");
+                    binding.cpUsername.setText(" ");
+                    return;
+                }
+
+                if(department == null || department.isEmpty() || department.length() > 30 ){
                     invalidEntryDialog("Department");
                     binding.cpDepartment.setText(" ");
                     return;
@@ -144,9 +143,27 @@ public class CreateProfileActivity extends AppCompatActivity {
                     return;
                 }
 
-                if(password == null || password.isEmpty() || password.length() > 20 ) {
+                if(password == null || password.isEmpty()) {
                     invalidEntryDialog("Password");
                     binding.cpPassword.setText(" ");
+                    return;
+                }
+
+                if (!((password.length() >= 8)
+                        && (password.length() <= 40))) {
+                    invalidEntryDialog("Password");
+                    binding.cpPassword.setText(" ");
+                    return;
+                }
+
+                if(location == null || location.isEmpty() || location.length() > 50) {
+                    invalidEntryDialog("Location");
+                    return;
+                }
+
+                int value = Integer.parseInt(remainingPointToAward);
+                if(value < 0 || remainingPointToAward.length() >= 11) {
+                    invalidEntryDialog("RemainingPointToAward");
                     return;
                 }
 
@@ -157,14 +174,14 @@ public class CreateProfileActivity extends AppCompatActivity {
                 newUserProfile.setDepartment(department);
                 newUserProfile.setPosition(position);
                 newUserProfile.setStory(story);
-                newUserProfile.setPointsToAward(remainingPoint);
-                newUserProfile.setLocation(MainActivity.locText);
+                newUserProfile.setPointsToAward(remainingPointToAward);
+                newUserProfile.setLocation(location);
 
                 String imageString64 = imageToBase64(); // Convert image to base64
                 Log.d(TAG, "doApiCall: base64 size " + imageString64.length());
                 newUserProfile.setImageBytes(imageString64);
 
-                CreateProfileVolley.createProfile(CreateProfileActivity.this, firstName, lastName, username, password, department, position, story, remainingPoint, MainActivity.locText, imageString64);
+                CreateProfileVolley.createProfile(CreateProfileActivity.this, firstName, lastName, username, password, department, position, story, remainingPointToAward, location, imageString64);
 
                 Intent intent = new Intent(CreateProfileActivity.this, ProfileActivity.class);
                 intent.putExtra("NEW_PROFILE",  newUserProfile);
@@ -287,14 +304,8 @@ public class CreateProfileActivity extends AppCompatActivity {
     }
 
     private void processCameraThumb(Bundle extras) {
-
-        Bitmap imageBitmap = (Bitmap) extras.get("data");
-        binding.profilePic.setImageBitmap(imageBitmap);
-
-        /// The below is not necessary - it's only done for example purposes
-        Bitmap bm = ((BitmapDrawable) binding.profilePic.getDrawable()).getBitmap();
-        makeCustomToast(this, String.format(Locale.getDefault(),
-                "Camera Image Size:%n%,d bytes", bm.getByteCount()));
+        selectedImage = (Bitmap) extras.get("data");
+        binding.profilePic.setImageBitmap(selectedImage);
     }
 
     // Process Gallery Image
@@ -329,8 +340,8 @@ public class CreateProfileActivity extends AppCompatActivity {
 
         selectedImage = BitmapFactory.decodeStream(imageStream);
         binding.profilePic.setImageBitmap(selectedImage);
-        makeCustomToast(this, String.format(Locale.getDefault(),
-                "Gallery Image Size:%n%,d bytes", selectedImage.getByteCount()));
+//        makeCustomToast(this, String.format(Locale.getDefault(),
+//                "Gallery Image Size:%n%,d bytes", selectedImage.getByteCount()));
 
     }
 

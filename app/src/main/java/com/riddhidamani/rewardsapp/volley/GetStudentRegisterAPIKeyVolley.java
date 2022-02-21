@@ -1,6 +1,5 @@
 package com.riddhidamani.rewardsapp.volley;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.util.Log;
 import com.android.volley.NetworkResponse;
@@ -14,7 +13,6 @@ import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.riddhidamani.rewardsapp.MainActivity;
 import com.riddhidamani.rewardsapp.R;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.HashMap;
@@ -35,12 +33,9 @@ public class GetStudentRegisterAPIKeyVolley {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    //JSONObject jsonObject = response.getJSONObject("");
                     String apiKey = response.getString("apiKey");
                     Log.d(TAG, "GetStudentRegisterAPIKeyVolley: " + apiKey);
                     activity.handleApiKeySucceeded(apiKey);
-//                    activity.runOnUiThread(() ->
-//                            );
                 } catch (JSONException exception) {
                    exception.printStackTrace();
                 }

@@ -1,18 +1,41 @@
 package com.riddhidamani.rewardsapp;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Base64;
-
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.riddhidamani.rewardsapp.databinding.ActivityEditProfileBinding;
-import com.riddhidamani.rewardsapp.databinding.ActivityProfileBinding;
 import com.riddhidamani.rewardsapp.profile.Profile;
+import com.riddhidamani.rewardsapp.volley.UpdateProfileVolley;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.Locale;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -20,10 +43,21 @@ public class EditProfileActivity extends AppCompatActivity {
     private ActivityEditProfileBinding binding;
     private Profile profileHolder;
 
-    // location
+    // Location
     private FusedLocationProviderClient mFusedLocationClient;
     private static final int LOCATION_REQUEST = 111;
     public static String locationData = "Unspecified Location";
+
+    // Image
+    public static Bitmap selectedImage;
+    private boolean changedImageFlag = false;
+
+    // Text Count
+    private static final int MAX_LEN = 360;
+
+    private ActivityResultLauncher<Intent> thumbActivityResultLauncher;
+    private ActivityResultLauncher<Intent> galleryActivityResultLauncher;
+    private ActivityResultLauncher<Intent> displayProfileResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,39 +72,269 @@ public class EditProfileActivity extends AppCompatActivity {
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
+        thumbActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                this::handleThumbResult);
+
+        galleryActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                this::handleGalleryResult);
+
+        displayProfileResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), this::displayUpdatedProfileHandler);
+
         Intent intent = getIntent();
         if (intent.hasExtra("EDIT_PROFILE")) {
             profileHolder = (Profile)intent.getSerializableExtra("EDIT_PROFILE");
             if (profileHolder != null) {
-                loadProfileData(profileHolder);
+                binding.epUsername.setEnabled(false);
+                binding.epUsername.setText(profileHolder.getUsername());
+                binding.epPassword.setText(profileHolder.getPassword());
+                binding.epFirstname.setText(profileHolder.getFirstName());
+                binding.epLastname.setText(profileHolder.getLastName());
+                binding.epDepartment.setText(profileHolder.getDepartment());
+                binding.epPosition.setText(profileHolder.getPosition());
+                binding.epUserStory.setText(profileHolder.getStory());
+                int len = profileHolder.getStory().length();
+                String countText = "Your Story: (" + len + " of " + MAX_LEN + ")";
+                binding.epStoryTitle.setText(countText);
+                textToImage(profileHolder.getImageBytes());
             }
         }
-
         locationData = MainActivity.locText;
+        setupEditText();
+    }
 
-        //setupEditText();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.editprofile_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.editSave:
+                saveEditDetailsDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(menuItem);
+        }
+    }
+
+    private void saveEditDetailsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.icon);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                profileHolder.setLocation(MainActivity.locText);
+                profileHolder.setPassword(binding.epPassword.getText().toString());
+                profileHolder.setFirstName(binding.epFirstname.getText().toString());
+                profileHolder.setLastName(binding.epLastname.getText().toString());
+                profileHolder.setDepartment(binding.epDepartment.getText().toString());
+                profileHolder.setPosition(binding.epPosition.getText().toString());
+                profileHolder.setStory(binding.epUserStory.getText().toString());
+
+                if(changedImageFlag) {
+                    String imageBase64 = imageToBase64();
+                    profileHolder.setImageBytes(imageBase64);
+                }
+                UpdateProfileVolley.updateProfileData(EditProfileActivity.this, profileHolder);
+                //new Thread(new UpdateProfileAPIRunnable(this, profileHolder)).start();
+            }
+        });
+
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
+        builder.setTitle("Save Changes?");
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void setupEditText() {
+
+        binding.epUserStory.setFilters(new InputFilter[] {
+                new InputFilter.LengthFilter(MAX_LEN) // Specifies a max text length
+        });
+
+        binding.epUserStory.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        // This one executes upon completion of typing a character
+                        int len = s.toString().length();
+                        String countText = "Your Story: (" + len + " of " + MAX_LEN + ")";
+                        binding.epStoryTitle.setText(countText);
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start,
+                                                  int count, int after) {
+                        // Nothing to do here
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start,
+                                              int before, int count) {
+                        // Nothing to do here
+                    }
+                });
+    }
+
+    public void getUpdatedUserProfile(String points) {
+        profileHolder.setPoints(points);
+        Intent intent = new Intent();
+        intent.putExtra("EDIT_PROFILE", profileHolder);
+        setResult(Activity.RESULT_OK, intent);
+        finish();
+    }
+
+    public void showImageDialog(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.icon);
+        builder.setPositiveButton("CAMERA", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                thumbActivityResultLauncher.launch(takePictureIntent);
+            }
+        });
+
+        builder.setNegativeButton("GALLERY", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                galleryActivityResultLauncher.launch(photoPickerIntent);
+            }
+        });
+
+        builder.setNeutralButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        builder.setTitle("Profile Picture");
+        builder.setMessage("Take picture from:");
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        changedImageFlag = true;
+    }
+
+    // Process Camera Thumb
+    public void handleThumbResult(ActivityResult result) {
+        if (result == null || result.getData() == null) {
+            Log.d(TAG, "handleResult: NULL ActivityResult received");
+            return;
+        }
+
+        if (result.getResultCode() == RESULT_OK) {
+            try {
+                Intent data = result.getData();
+                processCameraThumb(data.getExtras());
+            } catch (Exception e) {
+                Toast.makeText(this, "onActivityResult: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void processCameraThumb(Bundle extras) {
+
+        Bitmap imageBitmap = (Bitmap) extras.get("data");
+        binding.epProfilePic.setImageBitmap(imageBitmap);
+
+        /// The below is not necessary - it's only done for example purposes
+        Bitmap bm = ((BitmapDrawable) binding.epProfilePic.getDrawable()).getBitmap();
+        makeCustomToast(this, String.format(Locale.getDefault(),
+                "Camera Image Size:%n%,d bytes", bm.getByteCount()));
+    }
+
+    // Process Gallery Image
+    public void handleGalleryResult(ActivityResult result) {
+        if (result == null || result.getData() == null) {
+            Log.d(TAG, "handleResult: NULL ActivityResult received");
+            return;
+        }
+
+        if (result.getResultCode() == RESULT_OK) {
+            try {
+                Intent data = result.getData();
+                processGallery(data);
+            } catch (Exception e) {
+                Toast.makeText(this, "onActivityResult: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void processGallery(Intent data) {
+        Uri galleryImageUri = data.getData();
+        if (galleryImageUri == null)
+            return;
+
+        InputStream imageStream = null;
+        try {
+            imageStream = getContentResolver().openInputStream(galleryImageUri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        selectedImage = BitmapFactory.decodeStream(imageStream);
+        binding.epProfilePic.setImageBitmap(selectedImage);
+        makeCustomToast(this, String.format(Locale.getDefault(),
+                "Gallery Image Size:%n%,d bytes", selectedImage.getByteCount()));
 
     }
 
-    private void loadProfileData(Profile profile) {
+    private String imageToBase64() {
+        // Remember - API requirements:
+        // Profile image (as Base64 String) – Not null or empty, 100000 character maximum
 
-        binding.epUsername.setEnabled(false);
-        binding.epUsername.setText(profile.getUsername());
-        binding.epPassword.setText(profile.getPassword());
-        binding.epFirstname.setText(profile.getFirstName());
-        binding.epLastname.setText(profile.getLastName());
-        binding.epDepartment.setText(profile.getDepartment());
-        binding.epPosition.setText(profile.getPosition());
-        binding.epUserStory.setText(profile.getStory());
-        textToImage(profile.getImageBytes());
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        // Resize to match imageview size
+        int bmW = selectedImage.getWidth();
+        int bmH = selectedImage.getHeight();
+        double ratio = (double) bmW / (double) bmH;
+
+        int h = binding.epProfilePic.getHeight();
+        int w = (int) (h * ratio);
+        selectedImage = Bitmap.createScaledBitmap(selectedImage, w, h, false);
+
+        selectedImage.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        byte[] byteArray = baos.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
     public void textToImage(String imgStr64) {
         if (imgStr64 == null) return;
-
         byte[] imageBytes = Base64.decode(imgStr64, Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
         binding.epProfilePic.setImageBitmap(bitmap);
+    }
+
+    public static void makeCustomToast(Context context, String message) {
+        Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
+
+        TextView tv = new TextView(context);
+        tv.setText(message);
+        tv.setTextSize(18.0f);
+
+        tv.setPadding(50, 25, 50, 25);
+        tv.setTextColor(Color.BLACK);
+        tv.setBackgroundColor(Color.WHITE);
+        toast.setView(tv);
+
+        toast.show();
+    }
+
+    public void displayUpdatedProfileHandler(ActivityResult result) {
+        Log.d(TAG, "displayProfileHandler: ");
     }
 
 }
