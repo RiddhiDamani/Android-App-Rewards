@@ -35,6 +35,8 @@ import com.riddhidamani.rewardsapp.volley.UpdateProfileVolley;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class EditProfileActivity extends AppCompatActivity {
@@ -123,26 +125,67 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void saveEditDetailsDialog() {
+
+        List<String> errorMessage = new ArrayList<>();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(R.drawable.icon);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                String password = binding.epPassword.getText().toString();
+                String firstName = binding.epFirstname.getText().toString();
+                String lastName = binding.epLastname.getText().toString();
+                String department = binding.epDepartment.getText().toString();
+                String position = binding.epPosition.getText().toString();
+                String story = binding.epUserStory.getText().toString();
+
+                if(password == null || password.isEmpty()) {
+                    errorMessage.add("Password");
+                }
+
+                if (!((password.length() >= 8)
+                        && (password.length() <= 40))) {
+                    errorMessage.add("Valid Length Password");
+                }
+
+                if(firstName == null || firstName.isEmpty() || firstName.length() > 20 ) {
+                    errorMessage.add("First Name");
+                }
+
+                if(lastName == null || lastName.isEmpty() || lastName.length() > 20 ){
+                    errorMessage.add("Last Name");
+                }
+
+                if(department == null || department.isEmpty() || department.length() > 30 ){
+                    errorMessage.add("Department");
+                }
+
+                if(position == null || position.isEmpty() || position.length() > 20 ){
+                    errorMessage.add("Position");
+                }
+
+                if(story == null || story.isEmpty() || story.length() > 360 ){
+                    errorMessage.add("User Story");
+                }
+
+                if(errorMessage.size() > 0) {
+                    invalidEntryDialog(errorMessage);
+                    return;
+                }
 
                 profileHolder.setLocation(MainActivity.locText);
-                profileHolder.setPassword(binding.epPassword.getText().toString());
-                profileHolder.setFirstName(binding.epFirstname.getText().toString());
-                profileHolder.setLastName(binding.epLastname.getText().toString());
-                profileHolder.setDepartment(binding.epDepartment.getText().toString());
-                profileHolder.setPosition(binding.epPosition.getText().toString());
-                profileHolder.setStory(binding.epUserStory.getText().toString());
+                profileHolder.setPassword(password);
+                profileHolder.setFirstName(firstName);
+                profileHolder.setLastName(lastName);
+                profileHolder.setDepartment(department);
+                profileHolder.setPosition(position);
+                profileHolder.setStory(story);
 
                 if(changedImageFlag) {
                     String imageBase64 = imageToBase64();
                     profileHolder.setImageBytes(imageBase64);
                 }
                 UpdateProfileVolley.updateProfileData(EditProfileActivity.this, profileHolder);
-                //new Thread(new UpdateProfileAPIRunnable(this, profileHolder)).start();
             }
         });
 
@@ -152,6 +195,33 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         builder.setTitle("Save Changes?");
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void invalidEntryDialog(List invalidInfo) {
+        // Simple Ok & Cancel dialog - no view used.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.icon);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
+        String msg = "";
+        builder.setIcon(R.drawable.logo);
+        builder.setTitle("Data Problem");
+        for(int i=0; i < invalidInfo.size(); i++) {
+            if(i >= 1) {
+                msg = msg + ", " + invalidInfo.get(i);
+            }
+            else {
+                msg = (String) invalidInfo.get(i);
+            }
+        }
+        builder.setMessage("You must specify: " + "\n" + "\n" + msg);
+
         AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -186,8 +256,13 @@ public class EditProfileActivity extends AppCompatActivity {
                 });
     }
 
-    public void getUpdatedUserProfile(String points) {
-        profileHolder.setPoints(points);
+    public void getUpdatedUserProfile(String password, String firstname, String lastname, String department, String position, String story) {
+        profileHolder.setPassword(password);
+        profileHolder.setFirstName(firstname);
+        profileHolder.setLastName(lastname);
+        profileHolder.setDepartment(department);
+        profileHolder.setPosition(position);
+        profileHolder.setStory(story);
         Intent intent = new Intent();
         intent.putExtra("EDIT_PROFILE", profileHolder);
         setResult(Activity.RESULT_OK, intent);
@@ -244,14 +319,8 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void processCameraThumb(Bundle extras) {
-
-        Bitmap imageBitmap = (Bitmap) extras.get("data");
-        binding.epProfilePic.setImageBitmap(imageBitmap);
-
-        /// The below is not necessary - it's only done for example purposes
-        Bitmap bm = ((BitmapDrawable) binding.epProfilePic.getDrawable()).getBitmap();
-        makeCustomToast(this, String.format(Locale.getDefault(),
-                "Camera Image Size:%n%,d bytes", bm.getByteCount()));
+        selectedImage = (Bitmap) extras.get("data");
+        binding.epProfilePic.setImageBitmap(selectedImage);
     }
 
     // Process Gallery Image
@@ -286,8 +355,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
         selectedImage = BitmapFactory.decodeStream(imageStream);
         binding.epProfilePic.setImageBitmap(selectedImage);
-        makeCustomToast(this, String.format(Locale.getDefault(),
-                "Gallery Image Size:%n%,d bytes", selectedImage.getByteCount()));
+        //makeCustomToast(this, String.format(Locale.getDefault(),
+          //      "Gallery Image Size:%n%,d bytes", selectedImage.getByteCount()));
 
     }
 

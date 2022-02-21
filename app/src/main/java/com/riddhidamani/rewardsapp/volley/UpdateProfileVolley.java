@@ -53,11 +53,9 @@ public class UpdateProfileVolley {
             public void onResponse(JSONObject response) {
                 try {
                     String points = response.getString("remainingPointsToAward");
-                    editProfileActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            editProfileActivity.getUpdatedUserProfile(points);
-                        }
+                    editProfileActivity.runOnUiThread(() -> {
+                        // Need to update this -----> to incorporate rest of the fields.
+                        editProfileActivity.getUpdatedUserProfile(password, firstname, lastname, department, position, story);
                     });
                 } catch (JSONException exception) {
                     exception.printStackTrace();

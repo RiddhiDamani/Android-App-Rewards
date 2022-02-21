@@ -188,7 +188,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     private void displayEditProfileHandler(ActivityResult activityResult) {
         Log.d(TAG, "On handleResult Method: EDIT");
-        if(activityResult.getResultCode() == 1) {
+        if(activityResult.getResultCode() == RESULT_OK) {
             Intent data = activityResult.getData();
             if(data != null) {
                 Profile profile = (Profile)data.getSerializableExtra("EDIT_PROFILE");
