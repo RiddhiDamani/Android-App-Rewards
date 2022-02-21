@@ -36,6 +36,8 @@ import com.riddhidamani.rewardsapp.volley.GetStudentRegisterAPIKeyVolley;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class CreateProfileActivity extends AppCompatActivity {
@@ -92,6 +94,7 @@ public class CreateProfileActivity extends AppCompatActivity {
 
     private void saveUserProfile() {
 
+        List<String> errorMessage = new ArrayList<>();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -107,63 +110,53 @@ public class CreateProfileActivity extends AppCompatActivity {
                 String remainingPointToAward = "1000";
 
                 // Query Parameters Check - Validations of Input
-                if(firstName == null || firstName.isEmpty() || firstName.length() > 20 ){
-                    invalidEntryDialog("First Name");
-                    binding.cpFirstname.setText(" ");
-                    return;
-                }
-
-                if(lastName == null || lastName.isEmpty() || lastName.length() > 20 ){
-                    invalidEntryDialog("Last Name");
-                    binding.cpLastname.setText(" ");
-                    return;
-                }
 
                 if(username == null || username.isEmpty() || username.length() > 20) {
-                    invalidEntryDialog("Username");
-                    binding.cpUsername.setText(" ");
-                    return;
-                }
-
-                if(department == null || department.isEmpty() || department.length() > 30 ){
-                    invalidEntryDialog("Department");
-                    binding.cpDepartment.setText(" ");
-                    return;
-                }
-
-                if(story == null || story.isEmpty() || story.length() > 360 ){
-                    invalidEntryDialog("Story");
-                    binding.cpUserStory.setText(" ");
-                    return;
-                }
-
-                if(position == null || position.isEmpty() || position.length() > 20 ){
-                    invalidEntryDialog("Position");
-                    binding.cpPosition.setText(" ");
-                    return;
+                    errorMessage.add("Username");
                 }
 
                 if(password == null || password.isEmpty()) {
-                    invalidEntryDialog("Password");
-                    binding.cpPassword.setText(" ");
-                    return;
+                    errorMessage.add("Password");
                 }
 
                 if (!((password.length() >= 8)
                         && (password.length() <= 40))) {
-                    invalidEntryDialog("Password");
-                    binding.cpPassword.setText(" ");
-                    return;
+                    errorMessage.add("Valid Length Password");
+                }
+
+                if(firstName == null || firstName.isEmpty() || firstName.length() > 20 ) {
+                    errorMessage.add("First Name");
+                }
+
+                if(lastName == null || lastName.isEmpty() || lastName.length() > 20 ){
+                    errorMessage.add("Last Name");
+                }
+
+                if(department == null || department.isEmpty() || department.length() > 30 ){
+                    errorMessage.add("Department");
+                }
+
+                if(position == null || position.isEmpty() || position.length() > 20 ){
+                    errorMessage.add("Position");
+                }
+
+                if(story == null || story.isEmpty() || story.length() > 360 ){
+                    errorMessage.add("User Story");
                 }
 
                 if(location == null || location.isEmpty() || location.length() > 50) {
-                    invalidEntryDialog("Location");
+                    //invalidEntryDialog("Location");
                     return;
                 }
 
                 int value = Integer.parseInt(remainingPointToAward);
                 if(value < 0 || remainingPointToAward.length() >= 11) {
-                    invalidEntryDialog("RemainingPointToAward");
+                    //invalidEntryDialog("RemainingPointToAward");
+                    return;
+                }
+
+                if(errorMessage.size() > 0) {
+                    invalidEntryDialog(errorMessage);
                     return;
                 }
 
@@ -231,7 +224,7 @@ public class CreateProfileActivity extends AppCompatActivity {
                 });
     }
 
-    public void invalidEntryDialog(String invalidInfo) {
+    public void invalidEntryDialog(List invalidInfo) {
         // Simple Ok & Cancel dialog - no view used.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(R.drawable.icon);
@@ -241,8 +234,18 @@ public class CreateProfileActivity extends AppCompatActivity {
             }
         });
 
-        builder.setMessage("Invalid " + invalidInfo + " format, please enter again");
-        builder.setTitle("Invalid Input");
+        String msg = "";
+        builder.setIcon(R.drawable.logo);
+        builder.setTitle("Data Problem");
+        for(int i=0; i < invalidInfo.size(); i++) {
+            if(i >= 1) {
+                msg = msg + ", " + invalidInfo.get(i);
+            }
+            else {
+                msg = (String) invalidInfo.get(i);
+            }
+        }
+        builder.setMessage("You must specify: " + "\n" + "\n" + msg);
 
         AlertDialog dialog = builder.create();
         dialog.show();
