@@ -12,38 +12,55 @@
         android:id="@+id/rewardDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:text="@string/textview"
+        app:layout_constraintBottom_toBottomOf="@+id/rewardName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/reward_separator"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/rewardName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="156dp"
+        android:layout_marginStart="88dp"
         android:text="@string/textview"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/rewardDate" />
+        app:layout_constraintBottom_toTopOf="@+id/rewardNotes"
+        app:layout_constraintStart_toEndOf="@+id/rewardDate"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.157" />
 
     <TextView
         android:id="@+id/rewardPoints"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/textview"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/rewardDate" />
+        app:layout_constraintTop_toTopOf="@+id/reward_separator" />
 
     <TextView
         android:id="@+id/rewardNotes"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_width="379dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/textview"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="@+id/rewardPoints"
-        app:layout_constraintStart_toStartOf="@+id/rewardDate"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rewardDate" />
+
+    <ImageView
+        android:id="@+id/reward_separator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/separator"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-3dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

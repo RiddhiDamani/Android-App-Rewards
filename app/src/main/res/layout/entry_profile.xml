@@ -6,14 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="2dp"
-    android:layout_marginBottom="4dp"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:layout_marginBottom="2dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
 
     <ImageView
         android:id="@+id/userImage"
-        android:layout_width="60dp"
-        android:layout_height="72dp"
+        android:layout_width="50dp"
+        android:layout_height="60dp"
         android:layout_marginStart="8dp"
         android:contentDescription="@string/todo"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,9 +24,9 @@
         android:id="@+id/fullname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:text="@string/textview"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/userImage"
         app:layout_constraintTop_toTopOf="@+id/userImage" />
@@ -35,10 +35,16 @@
         android:id="@+id/position_department"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="7dp"
         android:text="@string/textview"
-        app:layout_constraintStart_toStartOf="@+id/fullname"
-        app:layout_constraintTop_toBottomOf="@+id/fullname" />
+        android:textSize="16sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/separator"
+        app:layout_constraintStart_toEndOf="@+id/userImage"
+        app:layout_constraintTop_toBottomOf="@+id/fullname"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/points"
@@ -46,9 +52,21 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:text="@string/textview"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/fullname" />
+
+    <ImageView
+        android:id="@+id/separator"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/todo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userImage"
+        app:srcCompat="@drawable/separator" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
