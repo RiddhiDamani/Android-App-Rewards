@@ -1,5 +1,6 @@
 package com.riddhidamani.rewardsapp;
 
+import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.view.View;
 
 import com.riddhidamani.rewardsapp.profile.Profile;
 import com.riddhidamani.rewardsapp.profile.ProfileAdapter;
+import com.riddhidamani.rewardsapp.reward.Reward;
 import com.riddhidamani.rewardsapp.volley.GetAllProfileVolley;
 
 import java.util.ArrayList;
@@ -47,7 +49,17 @@ public class LeaderboardActivity extends AppCompatActivity implements View.OnCli
                 new ActivityResultContracts.StartActivityForResult(), this::displayRewardHandler);
     }
 
-    private <O> void displayRewardHandler(O o) {
+    private void displayRewardHandler(ActivityResult activityResult) {
+        Log.d(TAG, "On handleResult Method: Leaderboard Activity");
+        if(activityResult.getResultCode() == RESULT_OK) {
+            Intent data = activityResult.getData();
+            if(data != null) {
+                Reward reward = (Reward) data.getSerializableExtra("ADD_REWARD");
+                if(reward != null) {
+                    //updateProfile(profile);
+                }
+            }
+        }
     }
 
     @Override

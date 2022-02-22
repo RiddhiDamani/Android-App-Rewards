@@ -48,6 +48,7 @@ public class CreateProfileActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> thumbActivityResultLauncher;
     private ActivityResultLauncher<Intent> galleryActivityResultLauncher;
     private ActivityResultLauncher<Intent> displayProfileResultLauncher;
+    Profile newUserProfile;
 
     // Story Count
     private static final int MAX_LEN = 360;
@@ -160,7 +161,7 @@ public class CreateProfileActivity extends AppCompatActivity {
                     return;
                 }
 
-                Profile newUserProfile = new Profile(username);
+                newUserProfile = new Profile(username);
                 newUserProfile.setPassword(password);
                 newUserProfile.setFirstName(firstName);
                 newUserProfile.setLastName(lastName);
@@ -383,7 +384,16 @@ public class CreateProfileActivity extends AppCompatActivity {
         toast.show();
     }
 
-    public void displayProfileHandler(ActivityResult result) {
+    public void displayProfileHandler(ActivityResult activityResult) {
         Log.d(TAG, "displayProfileHandler: ");
+        if(activityResult.getResultCode() == RESULT_OK) {
+            Intent data = activityResult.getData();
+            if(data != null) {
+                Profile profile = (Profile)data.getSerializableExtra("EDIT_PROFILE");
+                if(profile != null) {
+                    //updateProfile(profile);
+                }
+            }
+        }
     }
 }

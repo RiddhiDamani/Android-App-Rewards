@@ -4,13 +4,10 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -21,17 +18,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
-
 import com.riddhidamani.rewardsapp.databinding.ActivityProfileBinding;
 import com.riddhidamani.rewardsapp.profile.Profile;
 import com.riddhidamani.rewardsapp.reward.Reward;
 import com.riddhidamani.rewardsapp.reward.RewardAdapter;
-import com.riddhidamani.rewardsapp.volley.CreateProfileVolley;
 import com.riddhidamani.rewardsapp.volley.DeleteProfileVolley;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
@@ -191,9 +183,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         if(activityResult.getResultCode() == RESULT_OK) {
             Intent data = activityResult.getData();
             if(data != null) {
-                Profile profile = (Profile)data.getSerializableExtra("EDIT_PROFILE");
-                if(profile != null) {
-                    updateProfile(profile);
+                loggedInUserProfile = (Profile)data.getSerializableExtra("EDIT_PROFILE");
+                if(loggedInUserProfile != null) {
+                    updateProfile(loggedInUserProfile);
                 }
             }
         }

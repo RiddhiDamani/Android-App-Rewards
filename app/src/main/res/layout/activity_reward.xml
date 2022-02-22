@@ -161,7 +161,7 @@
         tools:ignore="TextContrastCheck,TouchTargetSizeCheck,DuplicateSpeakableTextCheck" />
 
     <EditText
-        android:id="@+id/et_reward_comment"
+        android:id="@+id/reward_comment_value"
         android:layout_width="0dp"
         android:layout_height="200dp"
         android:layout_marginStart="16dp"

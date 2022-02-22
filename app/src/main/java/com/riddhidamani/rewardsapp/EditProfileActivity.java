@@ -402,8 +402,17 @@ public class EditProfileActivity extends AppCompatActivity {
         toast.show();
     }
 
-    public void displayUpdatedProfileHandler(ActivityResult result) {
+    public void displayUpdatedProfileHandler(ActivityResult activityResult) {
         Log.d(TAG, "displayProfileHandler: ");
+        if(activityResult.getResultCode() == RESULT_OK) {
+            Intent data = activityResult.getData();
+            if(data != null) {
+                Profile profile = (Profile)data.getSerializableExtra("EDIT_PROFILE");
+                if(profile != null) {
+                    //updateProfile(profile);
+                }
+            }
+        }
     }
 
 }

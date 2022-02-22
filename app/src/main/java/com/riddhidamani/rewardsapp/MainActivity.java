@@ -10,6 +10,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -58,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
     EditText username, password;
     CheckBox checkbox;
 
+//    private SharedPreferences myPrefs;
+//    private SharedPreferences.Editor prefsEditor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,9 +80,11 @@ public class MainActivity extends AppCompatActivity {
         determineLocation();
         readJSON();
 
+//        myPrefs = getSharedPreferences("MY_PREFS", Context.MODE_PRIVATE);
+//        String myData = myPrefs.getString("APIKey", APIKey);
+
         if (APIKey == null || APIKey.isEmpty() || APIKey.equals("null")) {
             requestStudentRegisterApiKey();
-
         }
     }
 
@@ -268,6 +274,10 @@ public class MainActivity extends AppCompatActivity {
     public void handleApiKeySucceeded(String s) {
         APIKey = s;
         writeJSON();
+//        prefsEditor = myPrefs.edit();
+//        prefsEditor.putString("APIKey", s);
+        //prefsEditor.apply();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -294,6 +304,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void deleteStudentRegisterAPIKey(View v) {
+        //prefsEditor.clear();
         try {
             FileOutputStream fos = getApplicationContext().openFileOutput(getString(R.string.studRegisterAPIKeyJSON), Context.MODE_PRIVATE);
             JsonWriter writer = null;
