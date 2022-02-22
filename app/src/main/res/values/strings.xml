@@ -44,6 +44,12 @@
     <string name="pref">pref</string>
     <string name="edit">edit</string>
     <string name="item">Item</string>
+    <string name="your_story">Your Story:</string>
+    <string name="reward_points_to_send">Reward points to send:</string>
+    <string name="_0">0</string>
+    <string name="comment">Comment:</string>
+    <string name="add_comment">Add Comment</string>
     <string name="textview">TextView</string>
+
 
 </resources>

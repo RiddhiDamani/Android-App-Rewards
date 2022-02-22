@@ -1,9 +1,12 @@
 package com.riddhidamani.rewardsapp;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +26,8 @@ public class LeaderboardActivity extends AppCompatActivity implements View.OnCli
     private List<Profile> profileList = new ArrayList<>();
     private ProfileAdapter mAdaptor;
     private RecyclerView recyclerView;
+    private static int ADD_REWARD_REQUEST = 2;
+    private ActivityResultLauncher<Intent> displayRewardLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +42,22 @@ public class LeaderboardActivity extends AppCompatActivity implements View.OnCli
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         getAllProfile();
+
+        displayRewardLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), this::displayRewardHandler);
+    }
+
+    private <O> void displayRewardHandler(O o) {
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
+        int position = recyclerView.getChildLayoutPosition(view);
+        Profile profile = profileList.get(position);
 
+        Intent intent = new Intent(this, RewardActivity.class);
+        intent.putExtra("ADD_REWARD", profile);
+        displayRewardLauncher.launch(intent);
     }
 
     private void getAllProfile() {
