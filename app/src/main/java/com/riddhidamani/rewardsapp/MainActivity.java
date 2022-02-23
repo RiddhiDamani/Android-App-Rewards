@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
     EditText username, password;
     CheckBox checkbox;
+    public static String logInUsername;
 
 //    private SharedPreferences myPrefs;
 //    private SharedPreferences.Editor prefsEditor;
@@ -330,6 +331,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void displayLoginProfile(Profile profile) {
+        logInUsername = profile.getUsername();
         Intent intent = new Intent(this, ProfileActivity.class);
         intent.putExtra("LOGIN_PROFILE", profile);
         startActivity(intent);

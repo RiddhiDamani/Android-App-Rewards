@@ -386,7 +386,7 @@ public class CreateProfileActivity extends AppCompatActivity {
 
     public void displayProfileHandler(ActivityResult activityResult) {
         Log.d(TAG, "displayProfileHandler: ");
-        if(activityResult.getResultCode() == RESULT_OK) {
+        if(activityResult.getResultCode() == 1) {
             Intent data = activityResult.getData();
             if(data != null) {
                 Profile profile = (Profile)data.getSerializableExtra("EDIT_PROFILE");

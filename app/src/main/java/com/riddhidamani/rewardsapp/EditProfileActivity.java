@@ -265,7 +265,7 @@ public class EditProfileActivity extends AppCompatActivity {
         profileHolder.setStory(story);
         Intent intent = new Intent();
         intent.putExtra("EDIT_PROFILE", profileHolder);
-        setResult(Activity.RESULT_OK, intent);
+        setResult(1, intent);
         finish();
     }
 
@@ -355,7 +355,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         selectedImage = BitmapFactory.decodeStream(imageStream);
         binding.epProfilePic.setImageBitmap(selectedImage);
-        //makeCustomToast(this, String.format(Locale.getDefault(),
+        // makeCustomToast(this, String.format(Locale.getDefault(),
           //      "Gallery Image Size:%n%,d bytes", selectedImage.getByteCount()));
 
     }
@@ -404,7 +404,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     public void displayUpdatedProfileHandler(ActivityResult activityResult) {
         Log.d(TAG, "displayProfileHandler: ");
-        if(activityResult.getResultCode() == RESULT_OK) {
+        if(activityResult.getResultCode() == 1) {
             Intent data = activityResult.getData();
             if(data != null) {
                 Profile profile = (Profile)data.getSerializableExtra("EDIT_PROFILE");

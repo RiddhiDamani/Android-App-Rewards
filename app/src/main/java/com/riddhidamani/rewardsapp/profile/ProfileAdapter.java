@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.riddhidamani.rewardsapp.LeaderboardActivity;
+import com.riddhidamani.rewardsapp.MainActivity;
 import com.riddhidamani.rewardsapp.ProfileActivity;
 import com.riddhidamani.rewardsapp.R;
 import java.util.List;
@@ -20,7 +21,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileViewHolder> {
 
     private List<Profile> profileListHolder;
     private LeaderboardActivity leaderboardActivity;
-    private Profile loggedInUserProfile = ProfileActivity.loggedInUserProfile;
+    private String loggedUsername = MainActivity.logInUsername;
 
     public ProfileAdapter(List<Profile> profileListHolder, LeaderboardActivity leaderboardActivity) {
         this.profileListHolder = profileListHolder;
@@ -41,12 +42,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileViewHolder> {
     public void onBindViewHolder(@NonNull ProfileViewHolder holder, int position) {
         Profile profile = profileListHolder.get(position);
         String fullName = profile.getLastName() + ", " + profile.getFirstName();
-        String checkFullName = loggedInUserProfile.getLastName() + ", " + loggedInUserProfile.getFirstName();
-        if(fullName.equals(checkFullName)) {
-            holder.fullName.setTextColor(Color.parseColor("#FF9800"));
-            holder.positionAndDept.setTextColor(Color.parseColor("#FF9800"));
-            holder.points.setTextColor(Color.parseColor("#FF9800"));
-        }
         holder.fullName.setText(fullName);
         holder.points.setText(profile.getPoints());
         String posAndDp = profile.getPosition() + ", " + profile.getDepartment();

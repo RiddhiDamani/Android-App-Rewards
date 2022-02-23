@@ -35,7 +35,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private final List<Reward> rewardList = new ArrayList<>();
     private RewardAdapter mAdaptor;
     private RecyclerView recyclerView;
-
+    public static Reward reward;
     private ActivityResultLauncher<Intent> editProfileResultLauncher;
 
     @Override
@@ -137,7 +137,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     private void initiateLeaderBoardActivity() {
         Intent intent = new Intent(this, LeaderboardActivity.class);
-        startActivity(intent);
+        intent.putExtra("ADD_REWARD", reward);
+        editProfileResultLauncher.launch(intent);
+        //startActivity(intent);
     }
 
     private void deleteProfile() {
@@ -180,11 +182,23 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     private void displayEditProfileHandler(ActivityResult activityResult) {
         Log.d(TAG, "On handleResult Method: EDIT");
-        if(activityResult.getResultCode() == RESULT_OK) {
+        if(activityResult.getResultCode() == 1) {
             Intent data = activityResult.getData();
             if(data != null) {
                 loggedInUserProfile = (Profile)data.getSerializableExtra("EDIT_PROFILE");
                 if(loggedInUserProfile != null) {
+                    updateProfile(loggedInUserProfile);
+                }
+            }
+        }
+        else if(activityResult.getResultCode() == 2) {
+            Intent data = activityResult.getData();
+            if(data != null) {
+                reward = (Reward) data.getSerializableExtra("ADD_REWARD");
+                if(reward != null) {
+                    int updatedPointsToAward =
+                            Integer.parseInt(loggedInUserProfile.getPointsToAward()) - Integer.parseInt(reward.getAmount());
+                    loggedInUserProfile.setPointsToAward(String.valueOf(updatedPointsToAward));
                     updateProfile(loggedInUserProfile);
                 }
             }

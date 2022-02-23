@@ -15,6 +15,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.riddhidamani.rewardsapp.databinding.ActivityRewardBinding;
 import com.riddhidamani.rewardsapp.profile.Profile;
@@ -26,6 +27,7 @@ public class RewardActivity extends AppCompatActivity {
     private static final String TAG = "RewardActivity";
     private ActivityRewardBinding binding;
     private Profile profileHolder;
+    private String fullName;
     private Reward newRewardPoints = new Reward();
     private Profile loggedInUserProfile = ProfileActivity.loggedInUserProfile;
 
@@ -44,8 +46,8 @@ public class RewardActivity extends AppCompatActivity {
         if(intent.hasExtra("ADD_REWARD")) {
             profileHolder = (Profile) intent.getSerializableExtra("ADD_REWARD");
             if(profileHolder != null) {
-                String fullName = profileHolder.getLastName() + ", " + profileHolder.getFirstName();
-                binding.rewardFirstLastName.setText(fullName);
+                String fullNameStr = profileHolder.getLastName() + ", " + profileHolder.getFirstName();
+                binding.rewardFirstLastName.setText(fullNameStr);
                 binding.rewardPointsValue.setText(profileHolder.getPoints());
                 binding.rewardDeptValue.setText(profileHolder.getDepartment());
                 binding.rewardPositionValue.setText(profileHolder.getPosition());
@@ -60,7 +62,7 @@ public class RewardActivity extends AppCompatActivity {
             }
         }
 
-        String fullName = profileHolder.getFirstName() + " " + profileHolder.getLastName();
+        fullName = profileHolder.getFirstName() + " " + profileHolder.getLastName();
         setTitle(fullName);
     }
 
@@ -88,19 +90,24 @@ public class RewardActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                saveRewardPoints();
+                saveUserRewardPoints();
             }
         });
         builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
             }
         });
-        builder.setTitle("Save Changes?");
+
+        String content = "Add rewards for " + fullName + "?";
+
+        builder.setIcon(R.drawable.logo);
+        builder.setTitle("Add Rewards Points?");
+        builder.setMessage(content);
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
-    public void saveRewardPoints() {
+    public void saveUserRewardPoints() {
         String pointsToSend = binding.rewardPointsTosendValue.getText().toString();
         String comment = binding.rewardCommentValue.getText().toString();
 
@@ -112,6 +119,7 @@ public class RewardActivity extends AppCompatActivity {
         newRewardPoints.setReceiverUser(profileHolder.getUsername());
 
         RewardsVolley.saveRewardPoints(this, newRewardPoints);
+
     }
 
     public Bitmap textToImage(String imgStr64) {
@@ -128,7 +136,16 @@ public class RewardActivity extends AppCompatActivity {
         newRewardPoints.setAwardDate(awardDate);
         Intent intent = new Intent();
         intent.putExtra("ADD_REWARD", newRewardPoints);
-        setResult(Activity.RESULT_OK, intent);
+        setResult(2, intent);
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("ADD_REWARD", newRewardPoints);
+        setResult(2, intent);
+        finish();
+        super.onBackPressed();
     }
 }
