@@ -317,11 +317,11 @@ public class MainActivity extends AppCompatActivity {
             writer.name("APIKey").value("");
             writer.endObject();
             writer.close();
+            requestStudentRegisterApiKey();
 
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d(TAG, "writeJSONData: "+ e.getMessage());
-
+            Log.d(TAG, "writeJSONData: " + e.getMessage());
         }
     }
 
