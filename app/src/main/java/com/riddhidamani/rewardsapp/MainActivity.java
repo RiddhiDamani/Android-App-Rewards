@@ -7,8 +7,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -16,16 +14,13 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -93,7 +88,7 @@ public class MainActivity extends AppCompatActivity  {
         rememberMeSP = getSharedPreferences(FILE_NAME, MODE_PRIVATE);
         String un = rememberMeSP.getString("username", "");
         String pwd = rememberMeSP.getString("password", "");
-        Boolean checkbox = rememberMeSP.getBoolean("checkbox", false);
+        boolean checkbox = rememberMeSP.getBoolean("checkbox", false);
 
         username.setText(un);
         password.setText(pwd);
@@ -103,7 +98,7 @@ public class MainActivity extends AppCompatActivity  {
 
     public void performLogin(View v) {
         APIKey = myPrefs.getValue("APIKey");
-        if ( APIKey != "") {
+        if (!APIKey.equals("")) {
             String usernameStr = username.getText().toString();
             String passwordStr = password.getText().toString();
             if(rem_user_pass.isChecked()) {
@@ -219,57 +214,49 @@ public class MainActivity extends AppCompatActivity  {
         firstName.setInputType(InputType.TYPE_CLASS_TEXT);
 
 
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                EditText fName = view.findViewById(R.id.student_firstname);
-                EditText lName = view.findViewById(R.id.student_lastname);
-                EditText email = view.findViewById(R.id.student_emailid);
-                EditText id = view.findViewById(R.id.student_id);
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            EditText fName = view.findViewById(R.id.student_firstname);
+            EditText lName = view.findViewById(R.id.student_lastname);
+            EditText email = view.findViewById(R.id.student_emailid);
+            EditText id = view.findViewById(R.id.student_id);
 
-                stud_firstname = fName.getText().toString();
-                stud_lastname = lName.getText().toString();
-                stud_emailId = email.getText().toString();
-                stud_id = id.getText().toString();
+            stud_firstname = fName.getText().toString();
+            stud_lastname = lName.getText().toString();
+            stud_emailId = email.getText().toString();
+            stud_id = id.getText().toString();
 
-                if(stud_firstname.length() == 0 || stud_lastname.length() == 0 ||
-                        stud_emailId.length()  == 0 || stud_id.length() == 0) {
-                    requestStudentRegisterApiKey();
-                }
+            if(stud_firstname.length() == 0 || stud_lastname.length() == 0 ||
+                    stud_emailId.length()  == 0 || stud_id.length() == 0) {
+                requestStudentRegisterApiKey();
+            }
 
-                if (Patterns.EMAIL_ADDRESS.matcher(stud_emailId).matches())
-                {
-                    String emailDomain = stud_emailId.substring(stud_emailId.length() - 3);
-                    if(emailDomain.equals("edu")){
-                        Log.d(TAG, "email domain: " + emailDomain);
-                    }else{
-                        Toast.makeText(MainActivity.this, "Invalid Email Address!", Toast.LENGTH_SHORT).show();
-                        requestStudentRegisterApiKey();
-                    }
+            if (Patterns.EMAIL_ADDRESS.matcher(stud_emailId).matches())
+            {
+                String emailDomain = stud_emailId.substring(stud_emailId.length() - 3);
+                if(emailDomain.equals("edu")){
+                    Log.d(TAG, "email domain: " + emailDomain);
                 }else{
                     Toast.makeText(MainActivity.this, "Invalid Email Address!", Toast.LENGTH_SHORT).show();
                     requestStudentRegisterApiKey();
                 }
-
-                if(stud_id.length() > 20) {
-                    Toast.makeText(MainActivity.this, "Invalid Student ID!", Toast.LENGTH_SHORT).show();
-                    requestStudentRegisterApiKey();
-                }
-
-                GetStudentRegisterAPIKeyVolley.getApiKey(MainActivity.this, stud_firstname, stud_lastname, stud_emailId, stud_id);
+            }else{
+                Toast.makeText(MainActivity.this, "Invalid Email Address!", Toast.LENGTH_SHORT).show();
+                requestStudentRegisterApiKey();
             }
+
+            if(stud_id.length() > 20) {
+                Toast.makeText(MainActivity.this, "Invalid Student ID!", Toast.LENGTH_SHORT).show();
+                requestStudentRegisterApiKey();
+            }
+
+            GetStudentRegisterAPIKeyVolley.getApiKey(MainActivity.this, stud_firstname, stud_lastname, stud_emailId, stud_id);
         });
 
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                Toast.makeText(MainActivity.this, "You have to request an API Key!", Toast.LENGTH_SHORT).show();
-
-            }
-        });
+        builder.setNegativeButton("CANCEL", (dialog, id) -> Toast.makeText(MainActivity.this, "You have to request an API Key!", Toast.LENGTH_SHORT).show());
 
         builder.setTitle("API Key Needed");
         builder.setMessage("You need to request an API key:");
-        builder.setIcon(R.drawable.icon);
+        builder.setIcon(R.drawable.logo);
 
         builder.setView(view);
 
@@ -279,13 +266,11 @@ public class MainActivity extends AppCompatActivity  {
 
     public void handleApiKeySucceeded(String APIKey) {
         myPrefs.save("APIKey", APIKey);
-        Toast.makeText(MainActivity.this, "Information Saved!", Toast.LENGTH_LONG).show();
+        //Toast.makeText(MainActivity.this, "Information Saved!", Toast.LENGTH_LONG).show();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-            }
+        builder.setPositiveButton("OK", (dialog, id) -> {
         });
 
         builder.setTitle("API Key Received and Stored");
@@ -296,7 +281,7 @@ public class MainActivity extends AppCompatActivity  {
         String fullMessage = fullName + "\n" + id + "\n" + email + "\n" + apiKey;
 
         builder.setMessage(fullMessage);
-        builder.setIcon(R.drawable.icon);
+        builder.setIcon(R.drawable.logo);
         AlertDialog dialog = builder.create();
         dialog.show();
     }

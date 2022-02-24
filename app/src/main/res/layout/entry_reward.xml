@@ -35,12 +35,14 @@
         android:id="@+id/rewardPoints"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="32dp"
         android:layout_marginEnd="16dp"
         android:text="@string/textview"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/reward_separator" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/rewardName"
+        tools:layout_editor_absoluteY="3dp" />
 
     <TextView
         android:id="@+id/rewardNotes"
@@ -62,5 +64,5 @@
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/separator"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="-3dp" />
+        tools:layout_editor_absoluteY="62dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

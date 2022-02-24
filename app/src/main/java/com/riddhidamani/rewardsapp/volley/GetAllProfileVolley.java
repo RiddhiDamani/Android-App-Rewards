@@ -1,5 +1,6 @@
 package com.riddhidamani.rewardsapp.volley;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
 
@@ -14,6 +15,7 @@ import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.riddhidamani.rewardsapp.LeaderboardActivity;
 import com.riddhidamani.rewardsapp.MainActivity;
+import com.riddhidamani.rewardsapp.ProfileActivity;
 import com.riddhidamani.rewardsapp.profile.Profile;
 import com.riddhidamani.rewardsapp.reward.Reward;
 
@@ -32,6 +34,7 @@ public class GetAllProfileVolley {
     private static final String TAG = "GetAllProfileVolley";
     private static final String baseURL = "http://www.christopherhield.org/api/";
     private static final String endPoint = "Profile/GetAllProfiles";
+    private static final Profile loggedInUserDetails = ProfileActivity.loggedInUserProfile;
 
     public static void getAllUserProfiles(LeaderboardActivity leaderboardActivity, String APIKey) {
 
@@ -63,6 +66,7 @@ public class GetAllProfileVolley {
                        newProfile.setPosition(position);
                        newProfile.setStory(story);
                        newProfile.setImageBytes(imageBytes);
+
 
                        JSONArray reviewArray = profile.getJSONArray("rewardRecordViews");
 

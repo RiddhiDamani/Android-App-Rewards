@@ -21,7 +21,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileViewHolder> {
 
     private final List<Profile> profileListHolder;
     private final LeaderboardActivity leaderboardActivity;
-    private final Profile loggedInUserDetails = ProfileActivity.loggedInUserProfile;
+
 
     public ProfileAdapter(List<Profile> profileListHolder, LeaderboardActivity leaderboardActivity) {
         this.profileListHolder = profileListHolder;

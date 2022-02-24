@@ -1,5 +1,7 @@
 package com.riddhidamani.rewardsapp.profile;
 
+import android.graphics.Color;
+
 import com.riddhidamani.rewardsapp.reward.Reward;
 
 import java.io.Serializable;
@@ -10,7 +12,6 @@ public class Profile implements Serializable, Comparable<Profile> {
     private String username, password, firstName, lastName, department, position, story;
     private String points, pointsToAward, imageBytes;
     private String location;
-
     private List<Reward> listOfRewards = new ArrayList<Reward>();
 
     public Profile(String username) {
@@ -51,6 +52,7 @@ public class Profile implements Serializable, Comparable<Profile> {
     public String getLocation() {
         return location;
     }
+
     public List<Reward> getListOfRewards() {
         return listOfRewards;
     }
