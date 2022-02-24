@@ -33,8 +33,10 @@ public class LeaderboardActivity extends AppCompatActivity implements View.OnCli
     private ActivityResultLauncher<Intent> displayRewardLauncher;
     public static Reward reward;
     private int position;
-    SharedPreferences sharedPreferences;
-    String APIKey;
+
+    // Shared Preferences
+    private SharedPreferencesConfig myPrefs;
+    public static String APIKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +46,13 @@ public class LeaderboardActivity extends AppCompatActivity implements View.OnCli
         HomeNav.setupHomeIndicator(getSupportActionBar());
         setTitle("Leaderboard");
 
+        myPrefs = new SharedPreferencesConfig(this);
+        APIKey = myPrefs.getValue("APIKey");
+
         recyclerView = findViewById(R.id.recyclerView);
         mAdaptor = new ProfileAdapter(profileList, this);
         recyclerView.setAdapter(mAdaptor);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        sharedPreferences = getSharedPreferences("MyAPIPrefs", Context.MODE_PRIVATE);
-        APIKey = sharedPreferences.getString("MyAPIPrefs", "");
 
         getAllProfile();
 

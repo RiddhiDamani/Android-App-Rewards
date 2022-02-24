@@ -31,6 +31,10 @@ public class RewardActivity extends AppCompatActivity {
     private Reward newRewardPoints = new Reward();
     private Profile loggedInUserProfile = ProfileActivity.loggedInUserProfile;
 
+    // Shared Preferences
+    private SharedPreferencesConfig myPrefs;
+    public static String APIKey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +44,9 @@ public class RewardActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         HomeNav.setupHomeIndicator(getSupportActionBar());
+
+        myPrefs = new SharedPreferencesConfig(this);
+        APIKey = myPrefs.getValue("APIKey");
 
         // get Profile from LeaderboardActivity
         Intent intent = getIntent();

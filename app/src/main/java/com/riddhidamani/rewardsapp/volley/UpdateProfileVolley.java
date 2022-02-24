@@ -54,7 +54,6 @@ public class UpdateProfileVolley {
                 try {
                     String points = response.getString("remainingPointsToAward");
                     editProfileActivity.runOnUiThread(() -> {
-                        // Need to update this -----> to incorporate rest of the fields.
                         editProfileActivity.getUpdatedUserProfile(password, firstname, lastname, department, position, story);
                     });
                 } catch (JSONException exception) {
@@ -98,7 +97,7 @@ public class UpdateProfileVolley {
                 HashMap<String, String> headers = new HashMap<>();
                 headers.put("Content-Type", "application/json; charset=UTF-8");
                 headers.put("Accept", "application/json");
-                headers.put("ApiKey", MainActivity.APIKey);
+                headers.put("ApiKey", editProfileActivity.APIKey);
                 return headers;
             }
         };

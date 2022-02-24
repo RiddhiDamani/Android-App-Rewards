@@ -57,7 +57,7 @@ public class RewardsVolley {
                 } catch (JSONException exception) {
                     exception.printStackTrace();
                 }
-                Log.d(TAG, "run: created successfully" + response);
+                Log.d(TAG, "Reward created successfully" + response);
             }
         };
 
@@ -93,7 +93,7 @@ public class RewardsVolley {
                 HashMap<String, String> headers = new HashMap<>();
                 headers.put("Content-Type", "application/json; charset=UTF-8");
                 headers.put("Accept", "application/json");
-                headers.put("ApiKey", MainActivity.APIKey);
+                headers.put("ApiKey", rewardActivity.APIKey);
                 return headers;
             }
         };

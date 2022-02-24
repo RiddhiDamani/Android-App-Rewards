@@ -61,6 +61,10 @@ public class EditProfileActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> galleryActivityResultLauncher;
     private ActivityResultLauncher<Intent> displayProfileResultLauncher;
 
+    // Shared Preferences
+    private SharedPreferencesConfig myPrefs;
+    public static String APIKey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +75,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
         HomeNav.setupHomeIndicator(getSupportActionBar());
         setTitle("Edit Profile");
+
+        myPrefs = new SharedPreferencesConfig(this);
+        APIKey = myPrefs.getValue("APIKey");
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 

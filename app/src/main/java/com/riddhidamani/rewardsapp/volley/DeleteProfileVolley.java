@@ -8,7 +8,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.riddhidamani.rewardsapp.MainActivity;
 import com.riddhidamani.rewardsapp.ProfileActivity;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,8 +22,8 @@ public class DeleteProfileVolley {
 
         RequestQueue queue = Volley.newRequestQueue(profileActivity);
 
-        String urlToUse = makeUrl(profileActivity, userName);
-        Log.d(TAG, "run: Full URL: " + urlToUse);
+        String urlToUse = makeUrl(userName);
+        Log.d(TAG, "Full URL: " + urlToUse);
 
         Response.Listener<String> listener = new Response.Listener<String>() {
             @Override
@@ -63,7 +62,7 @@ public class DeleteProfileVolley {
                     HashMap<String, String> headers = new HashMap<>();
                     headers.put("Content-Type", "application/json; charset=UTF-8");
                     headers.put("Accept", "application/json");
-                    headers.put("ApiKey", MainActivity.APIKey);
+                    headers.put("ApiKey", profileActivity.APIKey);
                     return headers;
                 }
             };
@@ -72,7 +71,7 @@ public class DeleteProfileVolley {
 
     }
 
-    private static String makeUrl(ProfileActivity profileActivity, String userName) {
+    private static String makeUrl(String userName) {
         String urlString = baseURL + endPoint;
         Uri.Builder buildURL = Uri.parse(urlString).buildUpon();
         buildURL.appendQueryParameter("userName", userName);

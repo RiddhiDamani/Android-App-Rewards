@@ -38,6 +38,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     public static Reward reward;
     private ActivityResultLauncher<Intent> editProfileResultLauncher;
 
+    // Shared Preferences
+    private SharedPreferencesConfig myPrefs;
+    public static String APIKey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +52,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         HomeNav.setupHomeIndicator(getSupportActionBar());
         setTitle("Your Profile");
+
+        myPrefs = new SharedPreferencesConfig(this);
+        APIKey = myPrefs.getValue("APIKey");
 
         // get profile from CreateProfile
         Intent intent = getIntent();
@@ -139,7 +146,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         Intent intent = new Intent(this, LeaderboardActivity.class);
         intent.putExtra("ADD_REWARD", reward);
         editProfileResultLauncher.launch(intent);
-        //startActivity(intent);
     }
 
     private void deleteProfile() {

@@ -33,7 +33,7 @@ public class GetAllProfileVolley {
     private static final String baseURL = "http://www.christopherhield.org/api/";
     private static final String endPoint = "Profile/GetAllProfiles";
 
-    public static void getAllUserProfiles(LeaderboardActivity leaderboardActivity, String apiKey) {
+    public static void getAllUserProfiles(LeaderboardActivity leaderboardActivity, String APIKey) {
 
         RequestQueue queue = Volley.newRequestQueue(leaderboardActivity);
         String urlString = baseURL + endPoint;
@@ -139,7 +139,7 @@ public class GetAllProfileVolley {
                 HashMap<String, String> headers = new HashMap<>();
                 headers.put("Content-Type", "application/json; charset=UTF-8");
                 headers.put("Accept", "application/json");
-                headers.put("ApiKey", MainActivity.APIKey);
+                headers.put("ApiKey", APIKey);
                 return headers;
             }
         };
