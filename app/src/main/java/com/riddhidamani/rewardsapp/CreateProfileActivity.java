@@ -65,7 +65,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         binding = ActivityCreateProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         HomeNav.setupHomeIndicator(getSupportActionBar());
-        setTitle("Create Profile");
+        setTitle(" Create Profile");
 
         myPrefs = new SharedPreferencesConfig(this);
         APIKey = myPrefs.getValue("APIKey");

@@ -27,8 +27,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.riddhidamani.rewardsapp.databinding.ActivityEditProfileBinding;
 import com.riddhidamani.rewardsapp.profile.Profile;
 import com.riddhidamani.rewardsapp.volley.UpdateProfileVolley;
@@ -37,18 +35,12 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class EditProfileActivity extends AppCompatActivity {
 
     private static final String TAG = "EditProfileActivity";
     private ActivityEditProfileBinding binding;
     private Profile profileHolder;
-
-    // Location
-    private FusedLocationProviderClient mFusedLocationClient;
-    private static final int LOCATION_REQUEST = 111;
-    public static String locationData = "Unspecified Location";
 
     // Image
     public static Bitmap selectedImage;
@@ -74,12 +66,10 @@ public class EditProfileActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         HomeNav.setupHomeIndicator(getSupportActionBar());
-        setTitle("Edit Profile");
+        setTitle(" Edit Profile");
 
         myPrefs = new SharedPreferencesConfig(this);
         APIKey = myPrefs.getValue("APIKey");
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         thumbActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -110,7 +100,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 textToImage(profileHolder.getImageBytes());
             }
         }
-        locationData = MainActivity.locText;
+
         setupEditText();
     }
 
@@ -363,9 +353,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
         selectedImage = BitmapFactory.decodeStream(imageStream);
         binding.epProfilePic.setImageBitmap(selectedImage);
-        // makeCustomToast(this, String.format(Locale.getDefault(),
-          //      "Gallery Image Size:%n%,d bytes", selectedImage.getByteCount()));
-
     }
 
     private String imageToBase64() {

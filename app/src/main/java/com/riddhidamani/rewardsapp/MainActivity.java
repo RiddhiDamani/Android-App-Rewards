@@ -1,5 +1,6 @@
 package com.riddhidamani.rewardsapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity  {
         // binding = ActivityMainBinding.inflate(getLayoutInflater());
         // setContentView(binding.getRoot());
         HomeNav.setupHomeIndicator(getSupportActionBar());
-        setTitle("  Rewards");
+        setTitle(" Rewards");
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         determineLocation();
@@ -91,7 +92,6 @@ public class MainActivity extends AppCompatActivity  {
 
         username.setText(un);
         password.setText(pwd);
-
     }
 
 
@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity  {
         if ( APIKey != "") {
             String usernameStr = username.getText().toString();
             String passwordStr = password.getText().toString();
+
             if(rem_user_pass.isChecked()) {
                 storeDataUsingSP(usernameStr, passwordStr);
             }
@@ -131,7 +132,7 @@ public class MainActivity extends AppCompatActivity  {
             mFusedLocationClient.getLastLocation()
                     .addOnSuccessListener(this, location -> {
                         if (location != null) {
-                            locText = getGeoLocation(location);
+                            locText = getPlace(location);
                             Log.d(TAG, "determineLocation: " + locText);
                         }
                     })
@@ -153,8 +154,9 @@ public class MainActivity extends AppCompatActivity  {
         return true;
     }
 
-    private String getGeoLocation(Location loc) {
+    private String getPlace(Location loc) {
 
+        StringBuilder sb = new StringBuilder();
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         List<Address> addresses;
 
@@ -162,12 +164,33 @@ public class MainActivity extends AppCompatActivity  {
             addresses = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
             String city = addresses.get(0).getLocality();
             String state = addresses.get(0).getAdminArea();
-            return city + ", " + state;
+            sb.append(String.format(
+                    Locale.getDefault(),
+                    "%s, %s",
+                    city, state));
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "";
+        return sb.toString();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == LOCATION_REQUEST) {
+            if (permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    determineLocation();
+                } else {
+                    locText = "Unspecified Location11";
+                }
+            }
+        }
     }
 
     // Request API key for student registration

@@ -51,7 +51,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(binding.getRoot());
 
         HomeNav.setupHomeIndicator(getSupportActionBar());
-        setTitle("Your Profile");
+        setTitle(" Your Profile");
 
         myPrefs = new SharedPreferencesConfig(this);
         APIKey = myPrefs.getValue("APIKey");
@@ -91,7 +91,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         String pointStr = profile.getPoints();
         binding.pointsValue.setText(pointStr);
-        binding.location.setText(profile.getLocation());
+        binding.location.setText(MainActivity.locText);
         binding.pointsToAwardValue.setText(profile.getPointsToAward());
         String imgStr = profile.getImageBytes();
         textToImage(profile.getImageBytes());
@@ -175,7 +175,21 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     public void initiateDeleteProfile() {
         DeleteProfileVolley.initiate(ProfileActivity.this, loggedInUserProfile.getUsername());
-        finishAffinity();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.icon);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+               finishAffinity();
+            }
+        });
+
+        String message = "Profile for " + loggedInUserProfile.getFirstName() + " " + loggedInUserProfile.getLastName() + " Deleted";
+        builder.setIcon(R.drawable.logo);
+        builder.setTitle("Profile Deleted");
+        builder.setMessage(message);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public void textToImage(String imgStr64) {

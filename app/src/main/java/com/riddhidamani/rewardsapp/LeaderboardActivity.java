@@ -6,10 +6,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,7 +14,6 @@ import com.riddhidamani.rewardsapp.profile.Profile;
 import com.riddhidamani.rewardsapp.profile.ProfileAdapter;
 import com.riddhidamani.rewardsapp.reward.Reward;
 import com.riddhidamani.rewardsapp.volley.GetAllProfileVolley;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +40,7 @@ public class LeaderboardActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_leaderboard);
 
         HomeNav.setupHomeIndicator(getSupportActionBar());
-        setTitle("Leaderboard");
+        setTitle(" Leaderboard");
 
         myPrefs = new SharedPreferencesConfig(this);
         APIKey = myPrefs.getValue("APIKey");

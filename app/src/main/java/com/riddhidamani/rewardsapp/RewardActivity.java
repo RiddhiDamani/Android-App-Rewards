@@ -11,6 +11,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
@@ -35,6 +38,9 @@ public class RewardActivity extends AppCompatActivity {
     private SharedPreferencesConfig myPrefs;
     public static String APIKey;
 
+    // Story Count
+    private static final int MAX_LEN = 80;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +53,8 @@ public class RewardActivity extends AppCompatActivity {
 
         myPrefs = new SharedPreferencesConfig(this);
         APIKey = myPrefs.getValue("APIKey");
+
+        setupEditText();
 
         // get Profile from LeaderboardActivity
         Intent intent = getIntent();
@@ -129,6 +137,36 @@ public class RewardActivity extends AppCompatActivity {
 
     }
 
+    private void setupEditText() {
+
+        binding.rewardCommentValue.setFilters(new InputFilter[] {
+                new InputFilter.LengthFilter(MAX_LEN) // Specifies a max text length
+        });
+
+        binding.rewardCommentValue.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        // This one executes upon completion of typing a character
+                        int len = s.toString().length();
+                        String countText = "Comment: (" + len + " of " + MAX_LEN + ")";
+                        binding.rewardCommentTitle.setText(countText);
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start,
+                                                  int count, int after) {
+                        // Nothing to do here
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start,
+                                              int before, int count) {
+                        // Nothing to do here
+                    }
+                });
+    }
+
     public Bitmap textToImage(String imgStr64) {
         if (imgStr64 == null) return null;
         byte[] imageBytes = Base64.decode(imgStr64, Base64.DEFAULT);
@@ -149,10 +187,28 @@ public class RewardActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.putExtra("ADD_REWARD", newRewardPoints);
-        setResult(2, intent);
-        finish();
-        super.onBackPressed();
+
+        String rewardPointsToSendValue = binding.rewardPointsTosendValue.getText().toString();
+        String commentValue = binding.rewardCommentValue.getText().toString();
+
+        if(!(rewardPointsToSendValue.isEmpty() && commentValue.isEmpty())) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Save Rewards?");
+            builder.setMessage("Your reward points and comment is not saved! Do you want to exit without saving?");
+            builder.setPositiveButton(R.string.yes_button, (dialogInterface, i) -> RewardActivity.super.onBackPressed());
+            builder.setNegativeButton(R.string.no_button, (dialogInterface, i) -> {});
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+        else {
+            super.onBackPressed();
+        }
+
+//        Intent intent = new Intent();
+//        intent.putExtra("ADD_REWARD", newRewardPoints);
+//        setResult(2, intent);
+//        finish();
+
     }
 }
