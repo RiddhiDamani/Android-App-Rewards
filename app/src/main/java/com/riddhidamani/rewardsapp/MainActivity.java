@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity  {
         // binding = ActivityMainBinding.inflate(getLayoutInflater());
         // setContentView(binding.getRoot());
         HomeNav.setupHomeIndicator(getSupportActionBar());
-        setTitle("Rewards");
+        setTitle("  Rewards");
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         determineLocation();
@@ -279,7 +279,6 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     public void createProfile(View v) {
-        Toast.makeText(this, "Profile Creation Successful!", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, CreateProfileActivity.class);
         startActivity(intent);
     }

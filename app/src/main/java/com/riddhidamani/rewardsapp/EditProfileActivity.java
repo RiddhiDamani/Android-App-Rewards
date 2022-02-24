@@ -263,13 +263,14 @@ public class EditProfileActivity extends AppCompatActivity {
                 });
     }
 
-    public void getUpdatedUserProfile(String password, String firstname, String lastname, String department, String position, String story) {
+    public void getUpdatedUserProfile(String password, String firstname, String lastname, String department, String position, String story, String imageString64) {
         profileHolder.setPassword(password);
         profileHolder.setFirstName(firstname);
         profileHolder.setLastName(lastname);
         profileHolder.setDepartment(department);
         profileHolder.setPosition(position);
         profileHolder.setStory(story);
+        profileHolder.setImageBytes(imageString64);
         Intent intent = new Intent();
         intent.putExtra("EDIT_PROFILE", profileHolder);
         setResult(1, intent);

@@ -54,7 +54,7 @@ public class UpdateProfileVolley {
                 try {
                     String points = response.getString("remainingPointsToAward");
                     editProfileActivity.runOnUiThread(() -> {
-                        editProfileActivity.getUpdatedUserProfile(password, firstname, lastname, department, position, story);
+                        editProfileActivity.getUpdatedUserProfile(password, firstname, lastname, department, position, story, imageString64);
                     });
                 } catch (JSONException exception) {
                     exception.printStackTrace();
