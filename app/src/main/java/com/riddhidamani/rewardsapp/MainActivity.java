@@ -4,20 +4,16 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.JsonWriter;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.Gravity;
@@ -26,19 +22,12 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.riddhidamani.rewardsapp.profile.Profile;
 import com.riddhidamani.rewardsapp.volley.GetStudentRegisterAPIKeyVolley;
-import com.riddhidamani.rewardsapp.volley.LoginVolley;
-
-import org.json.JSONObject;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import com.riddhidamani.rewardsapp.volley.UserLoginVolley;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,15 +42,15 @@ public class MainActivity extends AppCompatActivity {
     public static String locText = "Unspecified Location";
 
     // Student Registration API
-    public static String APIKey;
     private String stud_firstname, stud_lastname, stud_emailId, stud_id;
 
     EditText username, password;
     CheckBox checkbox;
     public static String logInUsername;
 
-//    private SharedPreferences myPrefs;
-//    private SharedPreferences.Editor prefsEditor;
+    // Shared Preferences
+    private SharedPreferencesConfig myPrefs;
+    public static String APIKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,21 +68,33 @@ public class MainActivity extends AppCompatActivity {
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         determineLocation();
-        readJSON();
 
-//        myPrefs = getSharedPreferences("MY_PREFS", Context.MODE_PRIVATE);
-//        String myData = myPrefs.getString("APIKey", APIKey);
+        myPrefs = new SharedPreferencesConfig(this);
+        APIKey = myPrefs.getValue("APIKey");
 
-        if (APIKey == null || APIKey.isEmpty() || APIKey.equals("null")) {
+        if ( APIKey == null || APIKey.isEmpty() || APIKey.equals("null")) {
             requestStudentRegisterApiKey();
         }
     }
 
     public void performLogin(View v) {
-        String usernameStr = username.getText().toString();
-        String passwordStr = password.getText().toString();
-        writeJSON();
-        LoginVolley.getLoginDetails(this, usernameStr, passwordStr);
+        APIKey = myPrefs.getValue("APIKey");
+        if ( APIKey != "") {
+            String usernameStr = username.getText().toString();
+            String passwordStr = password.getText().toString();
+            UserLoginVolley.getLoginDetails(this, usernameStr, passwordStr, APIKey);
+        }
+        else {
+            Toast.makeText(this, "Need to Register for API", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void displayLoginProfile(Profile profile) {
+        Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show();
+        logInUsername = profile.getUsername();
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra("LOGIN_PROFILE", profile);
+        startActivity(intent);
     }
 
     // Initial Location setup
@@ -141,65 +142,7 @@ public class MainActivity extends AppCompatActivity {
         return "";
     }
 
-    // Saved Credentials - Read JSON Data
-    private void readJSON() {
-        try {
-            FileInputStream fis = getApplicationContext().openFileInput(getString(R.string.studRegisterAPIKeyJSON));
-
-            byte[] data = new byte[(int) fis.available()];
-            int loaded = fis.read(data);
-            Log.d(TAG, "readJSONData: Loaded " + loaded + " bytes");
-            fis.close();
-            String json = new String(data);
-
-            JSONObject jsonObject = new JSONObject(json);
-            if(jsonObject != null) {
-                APIKey = jsonObject.getString("APIKey");
-                if(jsonObject.has("saveCredentials")) {
-                    checkbox.setChecked(true);
-                }
-                if(jsonObject.has("username")) {
-                    username.setText(jsonObject.getString("username"));
-
-                }
-                if(jsonObject.has("password")) {
-                    password.setText(jsonObject.getString("password"));
-                }
-            }
-
-        } catch (Exception exception) {
-            Log.d(TAG, "readJSON: " + exception.getMessage());
-        }
-    }
-
-    // Saved Credentials - Write JSON Data
-    private void writeJSON() {
-        try {
-            FileOutputStream fos = getApplicationContext().openFileOutput(getString(R.string.studRegisterAPIKeyJSON), Context.MODE_PRIVATE);
-
-            JsonWriter writer = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                writer = new JsonWriter(new OutputStreamWriter(fos, StandardCharsets.UTF_8));
-            }
-            writer.setIndent("  ");
-            writer.beginObject();
-            writer.name("APIKey").value(APIKey);
-            if(checkbox.isChecked()) {
-                writer.name("saveCredentials").value("YES");
-                writer.name("username").value(username.getText().toString());
-                writer.name("password").value(password.getText().toString());
-            }
-            writer.endObject();
-            writer.close();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            Log.d(TAG, "writeJSON: "+ exception.getMessage());
-
-        }
-    }
-
     // Request API key for student registration
-
     private void requestStudentRegisterApiKey() {
 
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -251,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 GetStudentRegisterAPIKeyVolley.getApiKey(MainActivity.this, stud_firstname, stud_lastname, stud_emailId, stud_id);
-
             }
         });
 
@@ -272,12 +214,9 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void handleApiKeySucceeded(String s) {
-        APIKey = s;
-        writeJSON();
-//        prefsEditor = myPrefs.edit();
-//        prefsEditor.putString("APIKey", s);
-        //prefsEditor.apply();
+    public void handleApiKeySucceeded(String APIKey) {
+        myPrefs.save("APIKey", APIKey);
+        Toast.makeText(MainActivity.this, "Information Saved!", Toast.LENGTH_LONG).show();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -305,35 +244,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void deleteStudentRegisterAPIKey(View v) {
-        //prefsEditor.clear();
-        try {
-            FileOutputStream fos = getApplicationContext().openFileOutput(getString(R.string.studRegisterAPIKeyJSON), Context.MODE_PRIVATE);
-            JsonWriter writer = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                writer = new JsonWriter(new OutputStreamWriter(fos, StandardCharsets.UTF_8));
-            }
-            writer.setIndent("  ");
-            writer.beginObject();
-            writer.name("APIKey").value("");
-            writer.endObject();
-            writer.close();
-            requestStudentRegisterApiKey();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.d(TAG, "writeJSONData: " + e.getMessage());
-        }
+        Log.d(TAG, "clearAll: ");
+        myPrefs.removeValue("APIKey");
+        myPrefs.clearAll();
+        requestStudentRegisterApiKey();
     }
 
     public void createProfile(View v) {
+        Toast.makeText(this, "Profile Creation Successful!", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, CreateProfileActivity.class);
-        startActivity(intent);
-    }
-
-    public void displayLoginProfile(Profile profile) {
-        logInUsername = profile.getUsername();
-        Intent intent = new Intent(this, ProfileActivity.class);
-        intent.putExtra("LOGIN_PROFILE", profile);
         startActivity(intent);
     }
 }

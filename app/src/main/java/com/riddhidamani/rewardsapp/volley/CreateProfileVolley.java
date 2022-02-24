@@ -13,7 +13,6 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.riddhidamani.rewardsapp.CreateProfileActivity;
-import com.riddhidamani.rewardsapp.MainActivity;
 import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +34,7 @@ public class CreateProfileVolley {
         String urlToUse = makeUrl(firstname, lastname, username, password, department, position, story, remainingPointsToAward, location);
 
         Log.d(TAG, "run: Full URL: " + urlToUse);
-        Log.d(TAG, "Main Activity API" + MainActivity.APIKey);
+        Log.d(TAG, "Main Activity API" + CreateProfileActivity.APIKey);
 
         Response.Listener<JSONObject> listener = response -> Log.d(TAG, "user profile created successfully" + response);
 
@@ -80,7 +79,7 @@ public class CreateProfileVolley {
                 HashMap<String, String> headers = new HashMap<>();
                 headers.put("Content-Type", "application/json; charset=UTF-8");
                 headers.put("Accept", "application/json");
-                headers.put("ApiKey", MainActivity.APIKey);
+                headers.put("ApiKey", CreateProfileActivity.APIKey);
                 return headers;
             }
         };

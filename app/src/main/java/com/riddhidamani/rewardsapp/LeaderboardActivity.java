@@ -6,7 +6,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +33,8 @@ public class LeaderboardActivity extends AppCompatActivity implements View.OnCli
     private ActivityResultLauncher<Intent> displayRewardLauncher;
     public static Reward reward;
     private int position;
+    SharedPreferences sharedPreferences;
+    String APIKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,9 @@ public class LeaderboardActivity extends AppCompatActivity implements View.OnCli
         mAdaptor = new ProfileAdapter(profileList, this);
         recyclerView.setAdapter(mAdaptor);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        sharedPreferences = getSharedPreferences("MyAPIPrefs", Context.MODE_PRIVATE);
+        APIKey = sharedPreferences.getString("MyAPIPrefs", "");
 
         getAllProfile();
 
@@ -77,7 +85,7 @@ public class LeaderboardActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void getAllProfile() {
-        GetAllProfileVolley.getAllUserProfiles(this, MainActivity.APIKey);
+        GetAllProfileVolley.getAllUserProfiles(this, APIKey);
     }
 
     public void addProfile(Profile newProfile) {

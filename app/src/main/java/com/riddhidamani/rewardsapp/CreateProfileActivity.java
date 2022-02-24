@@ -53,6 +53,10 @@ public class CreateProfileActivity extends AppCompatActivity {
     // Story Count
     private static final int MAX_LEN = 360;
 
+    // Shared Preferences
+    private SharedPreferencesConfig myPrefs;
+    public static String APIKey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +66,10 @@ public class CreateProfileActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         HomeNav.setupHomeIndicator(getSupportActionBar());
         setTitle("Create Profile");
+
+        myPrefs = new SharedPreferencesConfig(this);
+        APIKey = myPrefs.getValue("APIKey");
+
         setupEditText();
 
         thumbActivityResultLauncher = registerForActivityResult(
