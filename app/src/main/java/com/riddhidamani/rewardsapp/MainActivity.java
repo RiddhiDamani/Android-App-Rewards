@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity  {
 
     // Student Registration API
     private String stud_firstname, stud_lastname, stud_emailId, stud_id;
-    public static String logInUsername;
 
     // Shared Preferences
     private SharedPreferencesConfig myPrefs;
@@ -86,12 +85,19 @@ public class MainActivity extends AppCompatActivity  {
         password = findViewById(R.id.rewards_main_pswd);
         rem_user_pass = findViewById(R.id.credentials_checkbox);
 
+        if(!rem_user_pass.isChecked()) {
+            Log.d(TAG, "onCreate: CHECKING CHECKBOX");
+
+        }
+
         rememberMeSP = getSharedPreferences(FILE_NAME, MODE_PRIVATE);
         String un = rememberMeSP.getString("username", "");
         String pwd = rememberMeSP.getString("password", "");
+        Boolean checkbox = rememberMeSP.getBoolean("checkbox", false);
 
         username.setText(un);
         password.setText(pwd);
+        rem_user_pass.setChecked(checkbox);
     }
 
 
@@ -100,9 +106,15 @@ public class MainActivity extends AppCompatActivity  {
         if ( APIKey != "") {
             String usernameStr = username.getText().toString();
             String passwordStr = password.getText().toString();
-
             if(rem_user_pass.isChecked()) {
-                storeDataUsingSP(usernameStr, passwordStr);
+                storeDataUsingSP(usernameStr, passwordStr, rem_user_pass.isChecked());
+            }
+            if(!rem_user_pass.isChecked()) {
+                rememberMeSPEditor = getSharedPreferences(FILE_NAME, MODE_PRIVATE).edit();
+                rememberMeSPEditor.remove("username");
+                rememberMeSPEditor.remove("password");
+                rememberMeSPEditor.remove("checkbox");
+                rememberMeSPEditor.apply();
             }
             UserLoginVolley.getLoginDetails(this, usernameStr, passwordStr, APIKey);
         }
@@ -111,16 +123,16 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
 
-    private void storeDataUsingSP(String usernameStr, String passwordStr) {
+    private void storeDataUsingSP(String usernameStr, String passwordStr, Boolean checked) {
         rememberMeSPEditor = getSharedPreferences(FILE_NAME, MODE_PRIVATE).edit();
         rememberMeSPEditor.putString("username", usernameStr);
         rememberMeSPEditor.putString("password", passwordStr);
+        rememberMeSPEditor.putBoolean("checkbox", checked);
         rememberMeSPEditor.apply();
     }
 
     public void displayLoginProfile(Profile profile) {
         Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show();
-        //logInUsername = profile.getUsername();
         Intent intent = new Intent(this, ProfileActivity.class);
         intent.putExtra("LOGIN_PROFILE", profile);
         startActivity(intent);

@@ -19,9 +19,9 @@ import java.util.List;
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileViewHolder> {
     private static final String TAG = "ProfileAdaptor";
 
-    private List<Profile> profileListHolder;
-    private LeaderboardActivity leaderboardActivity;
-    private String loggedUsername = MainActivity.logInUsername;
+    private final List<Profile> profileListHolder;
+    private final LeaderboardActivity leaderboardActivity;
+    private final Profile loggedInUserDetails = ProfileActivity.loggedInUserProfile;
 
     public ProfileAdapter(List<Profile> profileListHolder, LeaderboardActivity leaderboardActivity) {
         this.profileListHolder = profileListHolder;
@@ -34,7 +34,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileViewHolder> {
         Log.d(TAG, "onCreateViewHolder: MAKING NEW profileHolder");
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.entry_profile, parent, false);
         itemView.setOnClickListener(leaderboardActivity);
-
         return new ProfileViewHolder(itemView);
     }
 

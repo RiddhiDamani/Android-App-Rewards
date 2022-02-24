@@ -89,8 +89,8 @@ public class LeaderboardActivity extends AppCompatActivity implements View.OnCli
     public void addProfile(Profile newProfile) {
         if(newProfile == null) Log.d(TAG, "addProfile: null new profile to add");
         profileList.add(newProfile);
-        mAdaptor.notifyDataSetChanged();
         Collections.sort(profileList);
+        mAdaptor.notifyDataSetChanged();
     }
 
     @Override
