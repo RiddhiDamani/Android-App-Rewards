@@ -210,4 +210,27 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.icon);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
+        builder.setIcon(R.drawable.logo);
+        builder.setTitle("Exit Rewards App?");
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        //super.onBackPressed();
+    }
 }

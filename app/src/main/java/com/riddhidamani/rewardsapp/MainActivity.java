@@ -6,20 +6,25 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -31,9 +36,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
 
     private static final String TAG = "MainActivity";
+    private static final String FILE_NAME = "myCredentials";
     //private ActivityMainBinding binding;
 
     // location
@@ -43,14 +49,17 @@ public class MainActivity extends AppCompatActivity {
 
     // Student Registration API
     private String stud_firstname, stud_lastname, stud_emailId, stud_id;
-
-    EditText username, password;
-    CheckBox checkbox;
     public static String logInUsername;
 
     // Shared Preferences
     private SharedPreferencesConfig myPrefs;
     public static String APIKey;
+
+    // Remember Me Functionality
+    private EditText username, password;
+    private CheckBox rem_user_pass;
+    SharedPreferences rememberMeSP;
+    SharedPreferences.Editor rememberMeSPEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +71,6 @@ public class MainActivity extends AppCompatActivity {
         HomeNav.setupHomeIndicator(getSupportActionBar());
         setTitle("Rewards");
 
-        username = findViewById(R.id.rewards_main_username);
-        password = findViewById(R.id.rewards_main_pswd);
-        checkbox = findViewById(R.id.credentials_checkbox);
-
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         determineLocation();
 
@@ -75,13 +80,29 @@ public class MainActivity extends AppCompatActivity {
         if ( APIKey == null || APIKey.isEmpty() || APIKey.equals("null")) {
             requestStudentRegisterApiKey();
         }
+
+        username = findViewById(R.id.rewards_main_username);
+        password = findViewById(R.id.rewards_main_pswd);
+        rem_user_pass = findViewById(R.id.credentials_checkbox);
+
+        rememberMeSP = getSharedPreferences(FILE_NAME, MODE_PRIVATE);
+        String un = rememberMeSP.getString("username", "");
+        String pwd = rememberMeSP.getString("password", "");
+
+        username.setText(un);
+        password.setText(pwd);
+
     }
+
 
     public void performLogin(View v) {
         APIKey = myPrefs.getValue("APIKey");
         if ( APIKey != "") {
             String usernameStr = username.getText().toString();
             String passwordStr = password.getText().toString();
+            if(rem_user_pass.isChecked()) {
+                storeDataUsingSP(usernameStr, passwordStr);
+            }
             UserLoginVolley.getLoginDetails(this, usernameStr, passwordStr, APIKey);
         }
         else {
@@ -89,9 +110,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void storeDataUsingSP(String usernameStr, String passwordStr) {
+        rememberMeSPEditor = getSharedPreferences(FILE_NAME, MODE_PRIVATE).edit();
+        rememberMeSPEditor.putString("username", usernameStr);
+        rememberMeSPEditor.putString("password", passwordStr);
+        rememberMeSPEditor.apply();
+    }
+
     public void displayLoginProfile(Profile profile) {
         Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show();
-        logInUsername = profile.getUsername();
+        //logInUsername = profile.getUsername();
         Intent intent = new Intent(this, ProfileActivity.class);
         intent.putExtra("LOGIN_PROFILE", profile);
         startActivity(intent);
@@ -169,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
                 stud_emailId = email.getText().toString();
                 stud_id = id.getText().toString();
 
-                if(stud_firstname.length() == 0 || stud_lastname .length() == 0 ||
+                if(stud_firstname.length() == 0 || stud_lastname.length() == 0 ||
                         stud_emailId.length()  == 0 || stud_id.length() == 0) {
                     requestStudentRegisterApiKey();
                 }
@@ -254,5 +282,10 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Profile Creation Successful!", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, CreateProfileActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }
